@@ -214,9 +214,9 @@ def main(args):
     # split the dataset in train and test set
     # indices = torch.randperm(len(dataset)).tolist()
     indices = list(range(len(dataset)))
-    if not(args.without_400):
-        dataset = torch.utils.data.Subset(dataset, indices[:-400])
-        dataset_test = torch.utils.data.Subset(dataset_test, indices[-400:])
+    if not(args.without_40):
+        dataset = torch.utils.data.Subset(dataset, indices[:-40])
+        dataset_test = torch.utils.data.Subset(dataset_test, indices[-40:])
     else:
         dataset = torch.utils.data.Subset(dataset, indices)
         dataset_test = torch.utils.data.Subset(dataset_test, indices)
@@ -271,7 +271,7 @@ if __name__ == "__main__":
     parser.add_argument("--data_path", type=str, default="data/")
     parser.add_argument("--test_data_path", type=str, required=True)
 
-    parser.add_argument("--without_400", action = "store_true")
+    parser.add_argument("--without_40", action = "store_true")
     parser.add_argument("--save_path", type=str, default="data/")
     parser.add_argument("--object_types", choices=["objects", "receptacles", "all"], default="all")
     parser.add_argument("--save_name", type=str, default="mrcnn_alfred_objects")
