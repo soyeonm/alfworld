@@ -178,13 +178,17 @@ def main(args):
     num_classes = len(get_object_classes(args.object_types))+1
     # use our dataset and defined transformations
     dataset = AlfredDataset(args.data_path, get_transform(train=True), args)
-    dataset_test = AlfredDataset(args.data_path, get_transform(train=False), args)
+    dataset_test = AlfredDataset(args.test_data_path, get_transform(train=False), args)
 
     # split the dataset in train and test set
     # indices = torch.randperm(len(dataset)).tolist()
     indices = list(range(len(dataset)))
-    dataset = torch.utils.data.Subset(dataset, indices[:-4000])
-    dataset_test = torch.utils.data.Subset(dataset_test, indices[-4000:])
+    if not(args.without_4000):
+        dataset = torch.utils.data.Subset(dataset, indices[:-4000])
+        dataset_test = torch.utils.data.Subset(dataset_test, indices[-4000:])
+    else:
+        dataset = torch.utils.data.Subset(dataset, indices)
+        dataset_test = torch.utils.data.Subset(dataset_test, indices)
 
     # define training and validation data loaders
     data_loader = torch.utils.data.DataLoader(
@@ -233,6 +237,9 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_path", type=str, default="data/")
+    parser.add_argument("--test_data_path", type=str, required=True)
+
+    parser.add_argument("--without_4000", action = "store_true")
     parser.add_argument("--save_path", type=str, default="data/")
     parser.add_argument("--object_types", choices=["objects", "receptacles", "all"], default="all")
     parser.add_argument("--save_name", type=str, default="mrcnn_alfred_objects")
