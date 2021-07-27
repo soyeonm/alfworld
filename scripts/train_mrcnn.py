@@ -4,6 +4,7 @@
 import os
 import numpy as np
 import torch
+torch.multiprocessing.set_sharing_strategy('file_system')
 import random
 import json
 import argparse
