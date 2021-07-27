@@ -80,6 +80,7 @@ def evaluate(model, data_loader, device):
     header = 'Test:'
 
     coco = get_coco_api_from_dataset(data_loader.dataset)
+    #coco = data_loader.dataset
     print("coco loaded")
     #pickle.dump(data_loader.dataset, open('dataset.p', 'wb'))
     #coco = convert_to_coco_api(data_loader.dataset)
