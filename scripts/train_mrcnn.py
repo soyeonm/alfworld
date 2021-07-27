@@ -108,7 +108,7 @@ class AlfredDataset(object):
         mask_path = self.masks[idx]
         meta_path = self.metas[idx]
 
-        print("Opening: %s" % (self.imgs[idx]))
+        #print("Opening: %s" % (self.imgs[idx]))
 
         with open(meta_path, 'r') as f:
             color_to_object = json.load(f)
@@ -250,6 +250,7 @@ def main(args):
 
     # let's train it for 10 epochs
     num_epochs = 10
+    evaluate(model, data_loader_test, device=device)
 
     for epoch in range(num_epochs):
         # train for one epoch, printing every 10 iterations
