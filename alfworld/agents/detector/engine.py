@@ -78,11 +78,14 @@ def evaluate(model, data_loader, device):
     header = 'Test:'
 
     coco = get_coco_api_from_dataset(data_loader.dataset)
+    print("coco loaded")
     #pickle.dump(data_loader.dataset, open('dataset.p', 'wb'))
     #coco = convert_to_coco_api(data_loader.dataset)
     iou_types = _get_iou_types(model)
     coco_evaluator = CocoEvaluator(coco, iou_types)
+    print("coco evaluator loaded")
 
+    count = 0
     for image, targets in metric_logger.log_every(data_loader, 100, header):
         image = list(img.to(device) for img in image)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
@@ -99,6 +102,8 @@ def evaluate(model, data_loader, device):
         coco_evaluator.update(res)
         evaluator_time = time.time() - evaluator_time
         metric_logger.update(model_time=model_time, evaluator_time=evaluator_time)
+        count +=1
+        print("count is ", count)
 
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
