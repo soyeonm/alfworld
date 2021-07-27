@@ -71,8 +71,8 @@ class AlfredDataset(object):
             bathroom = [os.path.join(bathroom_path, f) for f in random.sample(bathroom, int(min_size*self.args.bathroom_factor))]
 
             self.imgs = kitchen + living + bedroom + bathroom
-            self.masks = [f.replace("images", "masks") for f in self.imgs]
-            self.metas = [f.replace("images", "meta").replace(".png", ".json") for f in self.imgs]
+            self.masks = [f.replace("images/", "masks/") for f in self.imgs]
+            self.metas = [f.replace("images/", "meta/").replace(".png", ".json") for f in self.imgs]
 
         elif balance_scenes and not(train_dataset):
             kitchen_path = os.path.join(root, 'kitchen', 'images')
@@ -94,8 +94,8 @@ class AlfredDataset(object):
 
             #self.imgs = kitchen + living + bedroom + bathroom
             self.imgs = kitchen + bedroom
-            self.masks = [f.replace("images", "masks") for f in self.imgs]
-            self.metas = [f.replace("images", "meta").replace(".png", ".json") for f in self.imgs]
+            self.masks = [f.replace("images/", "masks/") for f in self.imgs]
+            self.metas = [f.replace("images/", "meta/").replace(".png", ".json") for f in self.imgs]
         else:
             self.imgs = [os.path.join(root, "images", f) for f in list(sorted(os.listdir(os.path.join(root, "images"))))]
             self.masks = [os.path.join(root, "masks", f) for f in list(sorted(os.listdir(os.path.join(root, "masks"))))]
@@ -229,7 +229,7 @@ def main(args):
         collate_fn=utils.collate_fn)
 
     # get the model using our helper function
-    if args.load_model:
+    if len(args.load_model) > 0:
         model = load_pretrained_model(args.load_model)
     else:
         model = get_model_instance_segmentation(num_classes)
