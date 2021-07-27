@@ -47,6 +47,10 @@ class AlfredDataset(object):
         self.get_data_files(root, balance_scenes=args.balance_scenes, train_dataset=train_dataset)
 
 
+    def png_only(self, file_list):
+        return [f for f in file_list if f[-4:] == '.png']
+
+
     def get_data_files(self, root, balance_scenes=False, train_dataset=False):
         if balance_scenes and train_dataset:
             kitchen_path = os.path.join(root, 'kitchen', 'images')
@@ -54,10 +58,11 @@ class AlfredDataset(object):
             bedroom_path = os.path.join(root, 'bedroom', 'images')
             bathroom_path = os.path.join(root, 'bathroom', 'images')
 
-            kitchen = list(sorted(os.listdir(kitchen_path)))
-            living = list(sorted(os.listdir(living_path)))
-            bedroom = list(sorted(os.listdir(bedroom_path)))
-            bathroom = list(sorted(os.listdir(bathroom_path)))
+            kitchen = self.png_only(list(sorted(os.listdir(kitchen_path))))
+            living = self.png_only(list(sorted(os.listdir(living_path))))
+            bedroom = self.png_only(list(sorted(os.listdir(bedroom_path))))
+            bathroom = self.png_only(list(sorted(os.listdir(bathroom_path))))
+
 
             min_size = min(len(kitchen), len(living), len(bedroom), len(bathroom))
             kitchen = [os.path.join(kitchen_path, f) for f in random.sample(kitchen, int(min_size*self.args.kitchen_factor))]
@@ -75,9 +80,9 @@ class AlfredDataset(object):
             bedroom_path = os.path.join(root, 'bedroom', 'images')
             #bathroom_path = os.path.join(root, 'bathroom', 'images')
 
-            kitchen = list(sorted(os.listdir(kitchen_path)))
+            kitchen = self.png_only(list(sorted(os.listdir(kitchen_path))))
             #living = list(sorted(os.listdir(living_path)))
-            bedroom = list(sorted(os.listdir(bedroom_path)))
+            bedroom = self.png_only(list(sorted(os.listdir(bedroom_path))))
             #bathroom = list(sorted(os.listdir(bathroom_path)))
 
             #min_size = min(len(kitchen), len(living), len(bedroom), len(bathroom))
