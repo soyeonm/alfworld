@@ -255,7 +255,7 @@ def main(args):
         # update the learning rate
         lr_scheduler.step()
         # # evaluate on the test dataset
-        # evaluate(model, data_loader_test, device=device)
+        evaluate(model, data_loader_test, device=device)
         # save model
         model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
         torch.save(model.state_dict(), model_path)
