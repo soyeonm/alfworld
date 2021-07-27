@@ -205,7 +205,8 @@ def get_transform(train):
 
 def main(args):
     # train on the GPU or on the CPU, if a GPU is not available
-    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+    #torch.device("cuda:" + str(self.args.sem_seg_gpu) if args.cuda else "cpu")
+    device = torch.device('cuda:' + str(args.gpu_num)) if torch.cuda.is_available() else torch.device('cpu')
 
     # our dataset has two classes only - background and person
     num_classes = len(get_object_classes(args.object_types))+1
@@ -274,6 +275,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_path", type=str, default="data/")
     parser.add_argument("--test_data_path", type=str, required=True)
+    parser.add_argument("--gpu_num", type=int, default=0)
     parser.add_argument("--evaluate", action='store_true')
 
     parser.add_argument("--without_40", action = "store_true")
