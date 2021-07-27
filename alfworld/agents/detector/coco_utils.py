@@ -150,12 +150,14 @@ def convert_to_coco_api(ds):
     ann_id = 0
     dataset = {'images': [], 'categories': [], 'annotations': []}
     categories = set()
+    total_count = len(ds)
+    s_count = 0
     for img_idx in range(len(ds)):
         # find better way to get target
         # targets = ds.get_annotations(img_idx)
-        #print("img idx is ", img_idx)
+        print("img idx is ", img_idx)
         img, targets = ds[img_idx]
-        if img is not None:
+        try:
             #pickle.dump(targets, open("targets.p", "wb"))
             image_id = targets["image_id"].item()
             img_dict = {}
@@ -193,9 +195,13 @@ def convert_to_coco_api(ds):
                     ann['num_keypoints'] = sum(k != 0 for k in keypoints[i][2::3])
                 dataset['annotations'].append(ann)
                 ann_id += 1
+            s_count+=1
+        except:
+            pass
     dataset['categories'] = [{'id': i} for i in sorted(categories)]
     coco_ds.dataset = dataset
     coco_ds.createIndex()
+    print("went through ", s_count , " out of ", total_count, "val images")
     return coco_ds
 
 
