@@ -9,6 +9,8 @@ from alfworld.agents.detector.coco_utils import get_coco_api_from_dataset, conve
 from alfworld.agents.detector.coco_eval import CocoEvaluator
 import alfworld.agents.detector.utils as utils
 
+import pickle
+
 
 def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
     model.train()
@@ -76,6 +78,7 @@ def evaluate(model, data_loader, device):
     header = 'Test:'
 
     #coco = get_coco_api_from_dataset(data_loader.dataset)
+    pickle.dump(data_loader.dataset, open('dataset.p', 'wb'))
     coco = convert_to_coco_api(data_loader.dataset)
     iou_types = _get_iou_types(model)
     coco_evaluator = CocoEvaluator(coco, iou_types)
