@@ -91,6 +91,7 @@ def evaluate(model, data_loader, device):
 
     count = 0
     for image, targets in metric_logger.log_every(data_loader, 1, header):
+        print("here working")
         image = list(img.to(device) for img in image)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
