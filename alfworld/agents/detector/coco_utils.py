@@ -145,7 +145,7 @@ def _coco_remove_images_without_annotations(dataset, cat_list=None):
 
 
 def convert_to_coco_api(ds):
-    pickle.dump(ds, open("ds.p", "wb"))
+    #pickle.dump(ds, open("ds.p", "wb"))
     coco_ds = COCO()
     ann_id = 0
     dataset = {'images': [], 'categories': [], 'annotations': []}
@@ -154,9 +154,9 @@ def convert_to_coco_api(ds):
         # find better way to get target
         # targets = ds.get_annotations(img_idx)
         #print("img idx is ", img_idx)
+        img, targets = ds[img_idx]
         if img is not None:
-            img, targets = ds[img_idx]
-            pickle.dump(targets, open("targets.p", "wb"))
+            #pickle.dump(targets, open("targets.p", "wb"))
             image_id = targets["image_id"].item()
             img_dict = {}
             img_dict['id'] = image_id
