@@ -5,7 +5,7 @@ import torch
 
 import torchvision.models.detection.mask_rcnn
 
-from alfworld.agents.detector.coco_utils import get_coco_api_from_dataset
+from alfworld.agents.detector.coco_utils import get_coco_api_from_dataset, convert_to_coco_api
 from alfworld.agents.detector.coco_eval import CocoEvaluator
 import alfworld.agents.detector.utils as utils
 
@@ -75,7 +75,8 @@ def evaluate(model, data_loader, device):
     metric_logger = utils.MetricLogger(delimiter="  ")
     header = 'Test:'
 
-    coco = get_coco_api_from_dataset(data_loader.dataset)
+    #coco = get_coco_api_from_dataset(data_loader.dataset)
+    coco = convert_to_coco_api(data_loader.dataset)
     iou_types = _get_iou_types(model)
     coco_evaluator = CocoEvaluator(coco, iou_types)
 
