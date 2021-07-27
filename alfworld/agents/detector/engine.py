@@ -99,7 +99,7 @@ def evaluate(model, data_loader, device):
         outputs = model(image)
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
-        pickle.dump(outputs, open("outputs.p", "wb"))
+        print("outputs is ", outputs)
         model_time = time.time() - model_time
 
         res = {target["image_id"].item(): output for target, output in zip(targets, outputs)}
