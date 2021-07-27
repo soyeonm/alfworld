@@ -90,7 +90,7 @@ def evaluate(model, data_loader, device):
     print("coco evaluator loaded")
 
     count = 0
-    for image, targets in metric_logger.log_every(data_loader, 100, header):
+    for image, targets in metric_logger.log_every(data_loader, 1, header):
         image = list(img.to(device) for img in image)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
@@ -107,7 +107,7 @@ def evaluate(model, data_loader, device):
         evaluator_time = time.time() - evaluator_time
         metric_logger.update(model_time=model_time, evaluator_time=evaluator_time)
         count +=1
-        print("count is ", count)
+        #print("count is ", count)
 
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
