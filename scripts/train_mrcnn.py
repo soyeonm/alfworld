@@ -211,7 +211,7 @@ def main(args):
     num_classes = len(get_object_classes(args.object_types))+1
     # use our dataset and defined transformations
     dataset = AlfredDataset(args.data_path, get_transform(train=True), args, True)
-    dataset_test = AlfredDataset(args.test_data_path, get_transform(train=False), args, False)
+    #dataset_test = AlfredDataset(args.test_data_path, get_transform(train=False), args, False)
 
     # split the dataset in train and test set
     # indices = torch.randperm(len(dataset)).tolist()
@@ -220,10 +220,10 @@ def main(args):
         print("using 40 for validation")
         dataset = torch.utils.data.Subset(dataset, indices[:-40])
         #pickle.dump(dataset, open("dataset_train.p", "wb"))
-        dataset_test = torch.utils.data.Subset(dataset_test, indices[-40:])
+        dataset_test = torch.utils.data.Subset(dataset, indices[-40:])
     else:
         dataset = torch.utils.data.Subset(dataset, indices)
-        dataset_test = torch.utils.data.Subset(dataset_test, indices)
+        dataset_test = torch.utils.data.Subset(dataset, indices)
 
     # define training and validation data loaders
     data_loader = torch.utils.data.DataLoader(
@@ -254,7 +254,7 @@ def main(args):
 
     # let's train it for 10 epochs
     num_epochs = 10
-    evaluate(model, data_loader_test, device=device)
+    #evaluate(model, data_loader_test, device=device)
 
     for epoch in range(num_epochs):
         # train for one epoch, printing every 10 iterations
@@ -262,7 +262,7 @@ def main(args):
         # update the learning rate
         lr_scheduler.step()
         # # evaluate on the test dataset
-        evaluate(model, data_loader_test, device=device)
+        #evaluate(model, data_loader_test, device=device)
         # save model
         model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
         torch.save(model.state_dict(), model_path)
@@ -274,6 +274,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_path", type=str, default="data/")
     parser.add_argument("--test_data_path", type=str, required=True)
+    parser.add_argument("--evaluate", action='store_true')
 
     parser.add_argument("--without_40", action = "store_true")
     parser.add_argument("--save_path", type=str, default="data/")
