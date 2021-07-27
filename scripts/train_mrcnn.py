@@ -9,6 +9,7 @@ import random
 import json
 import argparse
 from PIL import Image
+import pickle
 import sys
 sys.path.append('/home/soyeonm/projects/devendra/alfworld/alfworld')
 
@@ -217,6 +218,7 @@ def main(args):
     if not(args.without_40):
         print("using 40 for validation")
         dataset = torch.utils.data.Subset(dataset, indices[:-40])
+        pickle.dump(dataset, open("dataset_train.p", "wb"))
         dataset_test = torch.utils.data.Subset(dataset_test, indices[-40:])
     else:
         dataset = torch.utils.data.Subset(dataset, indices)
