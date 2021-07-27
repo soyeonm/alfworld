@@ -54,7 +54,8 @@ class AlfredDataset(object):
 
 
     def get_data_files(self, root, balance_scenes=False, train_dataset=False):
-        if balance_scenes and train_dataset:
+        #if balance_scenes and train_dataset:
+        if balance_scenes:
             kitchen_path = os.path.join(root, 'kitchen', 'images')
             living_path = os.path.join(root, 'living', 'images')
             bedroom_path = os.path.join(root, 'bedroom', 'images')
@@ -76,28 +77,28 @@ class AlfredDataset(object):
             self.masks = [f.replace("images/", "masks/") for f in self.imgs]
             self.metas = [f.replace("images/", "meta/").replace(".png", ".json") for f in self.imgs]
 
-        elif balance_scenes and not(train_dataset):
-            kitchen_path = os.path.join(root, 'kitchen', 'images')
-            #living_path = os.path.join(root, 'living', 'images')
-            bedroom_path = os.path.join(root, 'bedroom', 'images')
-            #bathroom_path = os.path.join(root, 'bathroom', 'images')
+        # elif balance_scenes and not(train_dataset):
+        #     kitchen_path = os.path.join(root, 'kitchen', 'images')
+        #     #living_path = os.path.join(root, 'living', 'images')
+        #     bedroom_path = os.path.join(root, 'bedroom', 'images')
+        #     #bathroom_path = os.path.join(root, 'bathroom', 'images')
 
-            kitchen = self.png_only(list(sorted(os.listdir(kitchen_path))))
-            #living = list(sorted(os.listdir(living_path)))
-            bedroom = self.png_only(list(sorted(os.listdir(bedroom_path))))
-            #bathroom = list(sorted(os.listdir(bathroom_path)))
+        #     kitchen = self.png_only(list(sorted(os.listdir(kitchen_path))))
+        #     #living = list(sorted(os.listdir(living_path)))
+        #     bedroom = self.png_only(list(sorted(os.listdir(bedroom_path))))
+        #     #bathroom = list(sorted(os.listdir(bathroom_path)))
 
-            #min_size = min(len(kitchen), len(living), len(bedroom), len(bathroom))
-            min_size = min(len(kitchen), len(bedroom))
-            kitchen = [os.path.join(kitchen_path, f) for f in random.sample(kitchen, int(min_size*self.args.kitchen_factor))]
-            #living = [os.path.join(living_path, f) for f in random.sample(living, int(min_size*self.args.living_factor))]
-            bedroom = [os.path.join(bedroom_path, f) for f in random.sample(bedroom, int(min_size*self.args.bedroom_factor))]
-            #bathroom = [os.path.join(bathroom_path, f) for f in random.sample(bathroom, int(min_size*self.args.bathroom_factor))]
+        #     #min_size = min(len(kitchen), len(living), len(bedroom), len(bathroom))
+        #     min_size = min(len(kitchen), len(bedroom))
+        #     kitchen = [os.path.join(kitchen_path, f) for f in random.sample(kitchen, int(min_size*self.args.kitchen_factor))]
+        #     #living = [os.path.join(living_path, f) for f in random.sample(living, int(min_size*self.args.living_factor))]
+        #     bedroom = [os.path.join(bedroom_path, f) for f in random.sample(bedroom, int(min_size*self.args.bedroom_factor))]
+        #     #bathroom = [os.path.join(bathroom_path, f) for f in random.sample(bathroom, int(min_size*self.args.bathroom_factor))]
 
-            #self.imgs = kitchen + living + bedroom + bathroom
-            self.imgs = kitchen + bedroom
-            self.masks = [f.replace("images/", "masks/") for f in self.imgs]
-            self.metas = [f.replace("images/", "meta/").replace(".png", ".json") for f in self.imgs]
+        #     #self.imgs = kitchen + living + bedroom + bathroom
+        #     self.imgs = kitchen + bedroom
+        #     self.masks = [f.replace("images/", "masks/") for f in self.imgs]
+        #     self.metas = [f.replace("images/", "meta/").replace(".png", ".json") for f in self.imgs]
         else:
             self.imgs = [os.path.join(root, "images", f) for f in list(sorted(os.listdir(os.path.join(root, "images"))))]
             self.masks = [os.path.join(root, "masks", f) for f in list(sorted(os.listdir(os.path.join(root, "masks"))))]
@@ -218,7 +219,7 @@ def main(args):
     if not(args.without_40):
         print("using 40 for validation")
         dataset = torch.utils.data.Subset(dataset, indices[:-40])
-        pickle.dump(dataset, open("dataset_train.p", "wb"))
+        #pickle.dump(dataset, open("dataset_train.p", "wb"))
         dataset_test = torch.utils.data.Subset(dataset_test, indices[-40:])
     else:
         dataset = torch.utils.data.Subset(dataset, indices)
