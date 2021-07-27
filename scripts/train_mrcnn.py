@@ -19,6 +19,7 @@ from alfworld.agents.detector.mrcnn import get_model_instance_segmentation, load
 
 import sys
 import alfworld.gen.constants as constants
+sys.path.append('/home/soyeonm/projects/devendra/alfworld/alfworld')
 
 MIN_PIXELS = 100
 
