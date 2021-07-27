@@ -36,7 +36,7 @@ def get_object_classes(object_type):
         return ALL_DETECTOR
 
 class AlfredDataset(object):
-    def __init__(self, root, transforms, args):
+    def __init__(self, root, transforms, args, train_dataset):
         self.root = root
         self.transforms = transforms
         self.args = args
@@ -44,11 +44,11 @@ class AlfredDataset(object):
 
         # load all image files, sorting them to
         # ensure that they are aligned
-        self.get_data_files(root, balance_scenes=args.balance_scenes)
+        self.get_data_files(root, balance_scenes=args.balance_scenes, train_dataset=train_dataset)
 
 
-    def get_data_files(self, root, balance_scenes=False):
-        if balance_scenes:
+    def get_data_files(self, root, balance_scenes=False, train_dataset=False):
+        if balance_scenes and train_dataset:
             kitchen_path = os.path.join(root, 'kitchen', 'images')
             living_path = os.path.join(root, 'living', 'images')
             bedroom_path = os.path.join(root, 'bedroom', 'images')
@@ -178,8 +178,8 @@ def main(args):
     # our dataset has two classes only - background and person
     num_classes = len(get_object_classes(args.object_types))+1
     # use our dataset and defined transformations
-    dataset = AlfredDataset(args.data_path, get_transform(train=True), args)
-    dataset_test = AlfredDataset(args.test_data_path, get_transform(train=False), args)
+    dataset = AlfredDataset(args.data_path, get_transform(train=True), args, True)
+    dataset_test = AlfredDataset(args.test_data_path, get_transform(train=False), args, False)
 
     # split the dataset in train and test set
     # indices = torch.randperm(len(dataset)).tolist()
