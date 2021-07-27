@@ -80,7 +80,8 @@ class AlfredDataset(object):
             bedroom = list(sorted(os.listdir(bedroom_path)))
             #bathroom = list(sorted(os.listdir(bathroom_path)))
 
-            min_size = min(len(kitchen), len(living), len(bedroom), len(bathroom))
+            #min_size = min(len(kitchen), len(living), len(bedroom), len(bathroom))
+            min_size = min(len(kitchen), len(bedroom))
             kitchen = [os.path.join(kitchen_path, f) for f in random.sample(kitchen, int(min_size*self.args.kitchen_factor))]
             #living = [os.path.join(living_path, f) for f in random.sample(living, int(min_size*self.args.living_factor))]
             bedroom = [os.path.join(bedroom_path, f) for f in random.sample(bedroom, int(min_size*self.args.bedroom_factor))]
