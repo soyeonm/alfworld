@@ -77,9 +77,9 @@ def evaluate(model, data_loader, device):
     metric_logger = utils.MetricLogger(delimiter="  ")
     header = 'Test:'
 
-    #coco = get_coco_api_from_dataset(data_loader.dataset)
+    coco = get_coco_api_from_dataset(data_loader.dataset)
     #pickle.dump(data_loader.dataset, open('dataset.p', 'wb'))
-    coco = convert_to_coco_api(data_loader.dataset)
+    #coco = convert_to_coco_api(data_loader.dataset)
     iou_types = _get_iou_types(model)
     coco_evaluator = CocoEvaluator(coco, iou_types)
 
