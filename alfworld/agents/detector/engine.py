@@ -91,7 +91,7 @@ def evaluate(model, data_loader, device):
 
     count = 0
     for image, targets in metric_logger.log_every(data_loader, 1, header):
-        print("here working")
+        #print("here working")
         image = list(img.to(device) for img in image)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
@@ -100,7 +100,7 @@ def evaluate(model, data_loader, device):
         outputs = model(image)
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
-        print("outputs is ", outputs)
+        #print("outputs is ", outputs)
         model_time = time.time() - model_time
 
         res = {target["image_id"].item(): output for target, output in zip(targets, outputs)}
@@ -109,7 +109,8 @@ def evaluate(model, data_loader, device):
         evaluator_time = time.time() - evaluator_time
         metric_logger.update(model_time=model_time, evaluator_time=evaluator_time)
         count +=1
-        #print("count is ", count)
+    
+    print("evaluation count is ", count)
 
     # gather the stats from all processes
     metric_logger.synchronize_between_processes()
