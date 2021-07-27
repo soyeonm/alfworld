@@ -207,7 +207,7 @@ def convert_to_coco_api(ds):
 
 
 def get_coco_api_from_dataset(dataset):
-    pickle.dump(dataset, open("ds.p", "wb"))
+    #pickle.dump(dataset, open("ds.p", "wb"))
     for i in range(10):
         if isinstance(dataset, torchvision.datasets.CocoDetection):
             break
