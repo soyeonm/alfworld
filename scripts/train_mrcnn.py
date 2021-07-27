@@ -107,7 +107,7 @@ class AlfredDataset(object):
         mask_path = self.masks[idx]
         meta_path = self.metas[idx]
 
-        # print("Opening: %s" % (self.imgs[idx]))
+        print("Opening: %s" % (self.imgs[idx]))
 
         with open(meta_path, 'r') as f:
             color_to_object = json.load(f)
