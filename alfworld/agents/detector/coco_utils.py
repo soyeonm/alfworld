@@ -152,6 +152,7 @@ def convert_to_coco_api(ds):
     for img_idx in range(len(ds)):
         # find better way to get target
         # targets = ds.get_annotations(img_idx)
+        print("img idx is ", img_idx)
         img, targets = ds[img_idx]
         pickle.dump(targets, open("targets.p", "wb"))
         image_id = targets["image_id"].item()
