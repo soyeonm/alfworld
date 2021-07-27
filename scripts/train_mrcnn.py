@@ -112,7 +112,7 @@ class AlfredDataset(object):
         with open(meta_path, 'r') as f:
             color_to_object = json.load(f)
 
-        print("img_path is", img)
+        print("img_path is", img_path)
         img = Image.open(img_path).convert("RGB")
         # note that we haven't converted the mask to RGB,
         # because each color corresponds to a different instance
