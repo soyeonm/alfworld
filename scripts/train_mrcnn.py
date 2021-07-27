@@ -8,6 +8,8 @@ import random
 import json
 import argparse
 from PIL import Image
+import sys
+sys.path.append('/home/soyeonm/projects/devendra/alfworld/alfworld')
 
 import cv2
 
@@ -17,9 +19,7 @@ import torchvision
 import alfworld.agents.detector.transforms as T
 from alfworld.agents.detector.mrcnn import get_model_instance_segmentation, load_pretrained_model
 
-import sys
 import alfworld.gen.constants as constants
-sys.path.append('/home/soyeonm/projects/devendra/alfworld/alfworld')
 
 MIN_PIXELS = 100
 
