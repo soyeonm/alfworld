@@ -34,7 +34,7 @@ class ThorEnv(Controller):
 
         super().__init__(quality=quality)
         self.local_executable_path = build_path
-        self.start(x_display=x_display,
+        self.start(x_display=os.environ['DISPLAY'][1:],
                    player_screen_height=player_screen_height,
                    player_screen_width=player_screen_width)
         self.task = None
