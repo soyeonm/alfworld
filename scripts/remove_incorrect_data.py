@@ -50,7 +50,7 @@ for img_path, mask_path, meta_path in zip(imgs, masks, metas):
 	identifier = img_path[0].split('/')[-1][:-4]
 	#Try opening each of them 
 	try:
-		img = Image.open(img_path)
+		img = Image.open(img_path).convert("RGB")
 	except:
 		paths_broken_img.append(img_path)
 
