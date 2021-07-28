@@ -43,6 +43,7 @@ TRAJ_DATA_JSON_FILENAME = "traj_data.json"
 AUGMENTED_TRAJ_DATA_JSON_FILENAME = "augmented_traj_data.json"
 
 IMAGES_FOLDER = "images"
+DEPTH_FOLDER = "depths"
 MASKS_FOLDER = "masks"
 META_FOLDER = "meta"
 
@@ -76,6 +77,7 @@ def save_image(event, save_path):
     # rgb
     rgb_save_path = os.path.join(save_path, IMAGES_FOLDER)
     rgb_image = event.frame[:, :, ::-1]
+    depth_save_path = os.path.join(save_path, DEPTH_FOLDER)
     depth_image = event.depth_frame
     # masks
     mask_save_path = os.path.join(save_path, MASKS_FOLDER)
@@ -83,7 +85,7 @@ def save_image(event, save_path):
 
     # dump images
     im_ind = get_image_index(rgb_save_path)
-    cv2.imwrite(rgb_save_path + '/%09d.png' % im_ind, rgb_image); pickle.dump(depth_image, open(rgb_save_path + '/_depth' + '%09d.p' % im_ind, 'wb'))
+    cv2.imwrite(rgb_save_path + '/%09d.png' % im_ind, rgb_image); pickle.dump(depth_image, open(depth_save_path + '/depth' + '%09d.p' % im_ind, 'wb'))
     cv2.imwrite(mask_save_path + '/%09d.png' % im_ind, mask_image)
     return im_ind
 
@@ -135,6 +137,7 @@ def explore_scene(env, traj_data, root_dir):
                   'rotation': point[2],
                   'horizon': point[3]}
         event = env.step(action)
+        print("horizon is ", point[3])
         save_frame(env, event, root_dir)
         event = env.set_horizon(60)
         save_frame(env, event, root_dir)
@@ -176,12 +179,14 @@ def augment_traj(env, json_file, count):
     imgs_dir = os.path.join(root_dir, IMAGES_FOLDER)
     mask_dir = os.path.join(root_dir, MASKS_FOLDER)
     meta_dir = os.path.join(root_dir, META_FOLDER)
+    depth_dir = os.path.join(root_dir, DEPTH_FOLDER)
 
     clear_and_create_dir(imgs_dir)
     clear_and_create_dir(mask_dir)
     clear_and_create_dir(meta_dir)
+    clear_and_create_dir(depth_dir)
 
-    explored_len = 3*explore_scene(env, traj_data, root_dir)/2
+    explored_len = 2*explore_scene(env, traj_data, root_dir)/2
 
     env.step(dict(traj_data['scene']['init_action']))
     # print("Task: %s" % (traj_data['template']['task_desc']))
@@ -218,13 +223,13 @@ def augment_traj(env, json_file, count):
             for ri in range(keep_ri+1):
                 env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
 
-            hor_idx = np.random.choice(3)
+            hor_idx = np.random.choice(2)
             #for hor in [0,15,30]:
-            hor = [0,15,30][hor_idx]
+            hor = [0,15][hor_idx]
                 #if abs(hor-cur_hor)> 5:
             event = env.set_horizon(hor); save_frame(env, event, root_dir)
             idx = get_image_index(root_dir)
-            print("idx ", idx, " horizon is ", env.last_event.metadata['agent']['cameraHorizon'])
+            #print("idx ", idx, " horizon is ", env.last_event.metadata['agent']['cameraHorizon'])
             #Rotate back 
             for ri in range(keep_ri+1):
                 env.step(dict(action="RotateRight", degrees = "90", forceAction=True))
