@@ -12,6 +12,21 @@ import threading
 import cv2
 import numpy as np
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--data_path', type=str, default="$ALFWORLD_DATA/json_2.1.1")
+parser.add_argument('--save_path', type=str, default="detector/data/")
+parser.add_argument('--smooth_nav', dest='smooth_nav', action='store_true')
+parser.add_argument('--time_delays', dest='time_delays', action='store_true')
+parser.add_argument('--shuffle', dest='shuffle', action='store_true')
+parser.add_argument('--num_threads', type=int, default=1)
+parser.add_argument('--reward_config', type=str, default='alfworld/agents/config/rewards.json')
+parser.add_argument('--pick_few', dest='pick_few', action='store_true')
+parser.add_argument('--val', dest='val', action='store_true')
+parser.add_argument('--local', dest='local', action='store_true')
+args = parser.parse_args()
+
+
 if args.local:
     sys.path.append('/Users/soyeonmin/Documents/alfworld_soyeonm/alfworld')
 else:
@@ -291,18 +306,7 @@ traj_list = []
 lock = threading.Lock()
 
 # parse arguments
-parser = argparse.ArgumentParser()
-parser.add_argument('--data_path', type=str, default="$ALFWORLD_DATA/json_2.1.1")
-parser.add_argument('--save_path', type=str, default="detector/data/")
-parser.add_argument('--smooth_nav', dest='smooth_nav', action='store_true')
-parser.add_argument('--time_delays', dest='time_delays', action='store_true')
-parser.add_argument('--shuffle', dest='shuffle', action='store_true')
-parser.add_argument('--num_threads', type=int, default=1)
-parser.add_argument('--reward_config', type=str, default='alfworld/agents/config/rewards.json')
-parser.add_argument('--pick_few', dest='pick_few', action='store_true')
-parser.add_argument('--val', dest='val', action='store_true')
-parser.add_argument('--local', dest='local', action='store_true')
-args = parser.parse_args()
+
 
 
 # cache
