@@ -285,6 +285,7 @@ if __name__ == "__main__":
     parser.add_argument("--test_data_path", type=str, required=True)
     parser.add_argument("--gpu_num", type=int, default=0)
     parser.add_argument("--evaluate", action='store_true')
+    parser.add_argument("--resize", action='store_true')
 
     parser.add_argument("--without_40", action = "store_true")
     parser.add_argument("--save_path", type=str, default="data/")
