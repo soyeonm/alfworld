@@ -76,8 +76,8 @@ class AlfredDataset(object):
             bathroom = [os.path.join(bathroom_path, f) for f in random.sample(bathroom, int(min_size*self.args.bathroom_factor))]
 
             self.imgs = kitchen + living + bedroom + bathroom
-            self.masks = [f.replace("images/", "masks/") for f in self.imgs]
-            self.metas = [f.replace("images/", "meta/").replace(".png", ".json") for f in self.imgs]
+            self.masks = [f.replace("/images/", "/masks/") for f in self.imgs]
+            self.metas = [f.replace("/images/", "/meta/").replace(".png", ".json") for f in self.imgs]
 
         # elif balance_scenes and not(train_dataset):
         #     kitchen_path = os.path.join(root, 'kitchen', 'images')
