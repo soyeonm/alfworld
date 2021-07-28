@@ -91,8 +91,8 @@ def evaluate(model, data_loader, device):
 
     count = 0
     for image, targets in metric_logger.log_every(data_loader, 1, header):
-        pickle.dump(image, open("image.p", "wb"))
-        pickle.dump(targets, open("targets.p", "wb"))
+        #pickle.dump(image, open("image.p", "wb"))
+        #pickle.dump(targets, open("targets.p", "wb"))
         #print("here working")
         image = list(img.to(device) for img in image)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]

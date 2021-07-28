@@ -51,6 +51,35 @@ class ThorEnv(Controller):
 
         print("ThorEnv started.")
 
+    def set_horizon(self, angle, render_settings=None):
+        '''
+        look at a specific angle
+        '''
+        if render_settings is None:
+            render_settings = DEFAULT_RENDER_SETTINGS
+        event = self.last_event
+        #start_horizon = event.metadata['agent']['cameraHorizon']
+        rotation = np.round(event.metadata['agent']['rotation']['y'], 4)
+        end_horizon = angle
+        position = event.metadata['agent']['position']
+
+        teleport_action = {
+            'action': 'TeleportFull',
+            'rotation': rotation,
+            'x': position['x'],
+            'z': position['z'],
+            'y': position['y'],
+            'horizon': np.round(end_horizon, 3),
+            'tempRenderChange': True,
+            'renderNormalsImage': False,
+            'renderImage': render_settings['renderImage'],
+            'renderClassImage': render_settings['renderClassImage'],
+            'renderObjectImage': render_settings['renderObjectImage'],
+            'renderDepthImage': render_settings['renderDepthImage'],
+        }
+        event = super().step(teleport_action)
+        return event
+
     def reset(self, scene_name_or_num,
               grid_size=constants.AGENT_STEP_SIZE / constants.RECORD_SMOOTHING_FACTOR,
               camera_y=constants.CAMERA_HEIGHT_OFFSET,

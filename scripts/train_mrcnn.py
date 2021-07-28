@@ -8,7 +8,8 @@ torch.multiprocessing.set_sharing_strategy('file_system')
 import random
 import json
 import argparse
-from PIL import Image
+from PIL import Image, ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 import pickle
 import sys
 sys.path.append('/home/soyeonm/projects/devendra/alfworld/alfworld')
@@ -22,6 +23,7 @@ import alfworld.agents.detector.transforms as T
 from alfworld.agents.detector.mrcnn import get_model_instance_segmentation, load_pretrained_model
 
 import alfworld.gen.constants as constants
+import pickle
 
 MIN_PIXELS = 100
 
@@ -116,21 +118,21 @@ class AlfredDataset(object):
             color_to_object = json.load(f)
 
         #print("img_path is", img_path)
-        try:
-            img = Image.open(img_path).convert("RGB")
-        except:
-            print("img path is ", img_path)
+        
+        img = Image.open(img_path).convert("RGB")
+        if args.resize:
+            img.resize((300,300))
+            
         # note that we haven't converted the mask to RGB,
         # because each color corresponds to a different instance
         # with 0 being background
         mask = Image.open(mask_path)
+        if args.resize:
+            mask.resize((300,300))
 
         mask = np.array(mask)
         #print("mask_path is", mask_path)
-        try:
-            im_width, im_height = mask.shape[0], mask.shape[1]
-        except:
-            print("mask_path is", mask_path)
+        im_width, im_height = mask.shape[0], mask.shape[1]
         seg_colors = np.unique(mask.reshape(im_height*im_height, 3), axis=0)
 
         masks, boxes, labels = [], [], []
