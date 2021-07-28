@@ -4,7 +4,7 @@ import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--data_path", type=str, required=True)
-
+args = parser.parse_args()
 
 def png_only(file_list):
 	return [f for f in file_list if f[-4:] == '.png']
