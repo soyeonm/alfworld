@@ -12,8 +12,10 @@ import threading
 import cv2
 import numpy as np
 
-
-sys.path.append('/Users/soyeonmin/Documents/alfworld_soyeonm/alfworld')
+if args.local:
+    sys.path.append('/Users/soyeonmin/Documents/alfworld_soyeonm/alfworld')
+else:
+    sys.path.append('/home/soyeonm/alfworld')
 import alfworld.gen
 import alfworld.gen.constants as constants
 from alfworld.gen.utils.video_util import VideoSaver
@@ -298,6 +300,8 @@ parser.add_argument('--shuffle', dest='shuffle', action='store_true')
 parser.add_argument('--num_threads', type=int, default=1)
 parser.add_argument('--reward_config', type=str, default='alfworld/agents/config/rewards.json')
 parser.add_argument('--pick_few', dest='pick_few', action='store_true')
+parser.add_argument('--val', dest='val', action='store_true')
+parser.add_argument('--local', dest='local', action='store_true')
 args = parser.parse_args()
 
 
@@ -311,26 +315,29 @@ else:
 
 # make a list of all the traj_data json files
 data_path = os.path.expandvars(args.data_path)
-walk = walklevel(data_path, level=2)
-#walk_copy = copy.deepcopy(walklevel(data_path, level=2))
-np.random.seed(0)
-len_walk = 0
-for dir_name, subdir_list, file_list in walk:
-    len_walk +=1
-idxes = np.random.choice(len_walk, 40, replace=False)
-print("idxes is ", idxes) 
-#walk = [walk[i] for i in idxes]
-count_walk = 0
+if args.val:
+    walk = walklevel(data_path, level=2)
+    #walk_copy = copy.deepcopy(walklevel(data_path, level=2))
+    np.random.seed(0)
+    len_walk = 0
+    for dir_name, subdir_list, file_list in walk:
+        len_walk +=1
+    idxes = np.random.choice(len_walk, 40, replace=False)
+    print("idxes is ", idxes) 
+    #walk = [walk[i] for i in idxes]
+    count_walk = 0
 
-walk_chosen = []
-for dir_name, subdir_list, file_list in walklevel(data_path, level=2):
-    count_walk  +=1
-    if count_walk in idxes:
-        walk_chosen.append((dir_name, subdir_list, file_list))
+    walk_chosen = []
+    for dir_name, subdir_list, file_list in walklevel(data_path, level=2):
+        count_walk  +=1
+        if count_walk in idxes:
+            walk_chosen.append((dir_name, subdir_list, file_list))
 
-print("count is ", count_walk)
-print("len(idxes) is    ", len(idxes))  
-print("walk chosen is ", walk_chosen)   
+    print("count is ", count_walk)
+    print("len(idxes) is    ", len(idxes))  
+    print("walk chosen is ", walk_chosen)
+else:
+    walk_chosen = walklevel(data_path, level=2)
 
 for dir_name, subdir_list, file_list in walk_chosen:
     if "trial_" in dir_name:
