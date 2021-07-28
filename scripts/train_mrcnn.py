@@ -9,7 +9,7 @@ import random
 import json
 import argparse
 from PIL import Image, ImageFile
-ImageFile.LOAD_TRUNCATED_IMAGES = True
+#ImageFile.LOAD_TRUNCATED_IMAGES = True
 import pickle
 import sys
 sys.path.append('/home/soyeonm/projects/devendra/alfworld/alfworld')
