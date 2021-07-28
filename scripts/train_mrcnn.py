@@ -115,16 +115,22 @@ class AlfredDataset(object):
         with open(meta_path, 'r') as f:
             color_to_object = json.load(f)
 
-        print("img_path is", img_path)
-        img = Image.open(img_path).convert("RGB")
+        #print("img_path is", img_path)
+        try:
+            img = Image.open(img_path).convert("RGB")
+        except:
+            print("img path is ", img_path)
         # note that we haven't converted the mask to RGB,
         # because each color corresponds to a different instance
         # with 0 being background
         mask = Image.open(mask_path)
 
         mask = np.array(mask)
-        print("mask_path is", mask_path)
-        im_width, im_height = mask.shape[0], mask.shape[1]
+        #print("mask_path is", mask_path)
+        try:
+            im_width, im_height = mask.shape[0], mask.shape[1]
+        except:
+            print("mask_path is", mask_path)
         seg_colors = np.unique(mask.reshape(im_height*im_height, 3), axis=0)
 
         masks, boxes, labels = [], [], []
