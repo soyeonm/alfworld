@@ -46,7 +46,7 @@ for img_path, mask_path, meta_path in zip(imgs, masks, metas):
 	counter +=1
 	if counter %1000 == 0:
 		print("counter is ", counter)
-	identifier = img[0].split('/')[-1][:-4]
+	identifier = img_path[0].split('/')[-1][:-4]
 	#Try opening each of them 
 	try:
 		img = Image.open(img_path)
