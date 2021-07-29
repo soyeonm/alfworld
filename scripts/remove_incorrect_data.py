@@ -96,7 +96,6 @@ for room_type in dict_identifier:
 	dict_identifier[room_type]= list(set(dict_identifier[room_type]))
 
 
-root = os.environ['data_path']
 #Remove all the broken ones
 #get paths first
 delete_images = []; delete_masks=[]; delete_metas=[]
