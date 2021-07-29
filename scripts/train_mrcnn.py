@@ -232,7 +232,7 @@ def main(args):
         #pickle.dump(dataset, open("dataset_train.p", "wb"))
         dataset_test = torch.utils.data.Subset(dataset_test, indices_test[-40:])
     else:
-        dataset = torch.utils.data.Subset(dataset, indices_test)
+        dataset = torch.utils.data.Subset(dataset, indices)
         dataset_test = torch.utils.data.Subset(dataset_test, indices_test)
 
     # define training and validation data loaders
