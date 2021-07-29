@@ -264,8 +264,8 @@ def main(args):
 
     # let's train it for 10 epochs
     num_epochs = 10
-    if args.evaluate:
-        evaluate(model, data_loader_test, device=device)
+    #if args.evaluate:
+    #    evaluate(model, data_loader_test, device=device)
 
     for epoch in range(num_epochs):
         # train for one epoch, printing every 10 iterations
