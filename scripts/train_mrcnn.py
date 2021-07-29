@@ -225,14 +225,15 @@ def main(args):
     # split the dataset in train and test set
     # indices = torch.randperm(len(dataset)).tolist()
     indices = list(range(len(dataset)))
+    indices_test = list(range(len(dataset)))
     if not(args.without_40):
         print("using 40 for validation")
         dataset = torch.utils.data.Subset(dataset, indices[:-40])
         #pickle.dump(dataset, open("dataset_train.p", "wb"))
-        dataset_test = torch.utils.data.Subset(dataset_test, indices[-40:])
+        dataset_test = torch.utils.data.Subset(dataset_test, indices_test[-40:])
     else:
-        dataset = torch.utils.data.Subset(dataset, indices)
-        dataset_test = torch.utils.data.Subset(dataset_test, indices)
+        dataset = torch.utils.data.Subset(dataset, indices_test)
+        dataset_test = torch.utils.data.Subset(dataset_test, indices_test)
 
     # define training and validation data loaders
     data_loader = torch.utils.data.DataLoader(
