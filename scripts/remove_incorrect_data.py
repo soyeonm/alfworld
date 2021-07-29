@@ -73,4 +73,49 @@ pickle.dump(paths_broken_mask, open(os.path.join(args.data_path, "paths_broken_m
 pickle.dump(paths_broken_meta, open(os.path.join(args.data_path, "paths_broken_meta.p") , "wb"))
 
 
+#Get identifiers
+
+dict_identifier = {'kitchen':[], 'living':[], 'bedroom':[], 'bathroom':[]}
+
+for i, p in enumerate(paths_broken_img):
+	room_type = p.split('/')[-3]
+	identifier = p.split('/')[-1].split('.')[0]
+	dict_identifier[room_type].append(identifier)
+
+for i, p in enumerate(paths_broken_mask):
+	room_type = p.split('/')[-3]
+	identifier = p.split('/')[-1].split('.')[0]
+	dict_identifier[room_type].append(identifier)
+
+for i, p in enumerate(paths_broken_meta):
+	room_type = p.split('/')[-3]
+	identifier = p.split('/')[-1].split('.')[0]
+	dict_identifier[room_type].append(identifier)
+
+for room_type in dict_identifier:
+	dict_identifier[room_type]= list(set(dict_identifier[room_type]))
+
+
+root = os.environ['data_path']
+#Remove all the broken ones
+#get paths first
+delete_images = []; delete_masks=[]; delete_metas=[]
+for r, identifier_list in dict_identifier.items():
+	for identifier in identifier_list:
+		#Remove image, mask, meta
+		folder_path = os.path.join(root, r, 'images')
+		file_path = identifier + '.png'
+		delete_images.append(os.path.join(folder_path, file_path))
+		#
+		folder_path = os.path.join(root, r, 'masks')
+		file_path = identifier + '.png'
+		delete_masks.append(os.path.join(folder_path, file_path))
+		#
+		folder_path = os.path.join(root, r, 'meta')
+		file_path = identifier + '.json'
+		delete_metas.append(os.path.join(folder_path, file_path))
+
+for p1, p2, p3 in zip(delete_images,delete_masks, delete_metas):
+	assert os.path.exists(p1); assert os.path.exists(p2); assert os.path.exists(p3)
+	os.remove(p1); os.remove(p2); os.remove(p3)
 
