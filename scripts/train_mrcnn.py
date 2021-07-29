@@ -225,7 +225,7 @@ def main(args):
     # split the dataset in train and test set
     # indices = torch.randperm(len(dataset)).tolist()
     indices = list(range(len(dataset)))
-    indices_test = list(range(len(dataset)))
+    indices_test = list(range(len(dataset_test)))
     if not(args.without_40):
         print("using 40 for validation")
         dataset = torch.utils.data.Subset(dataset, indices[:-40])
