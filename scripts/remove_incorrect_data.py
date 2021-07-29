@@ -3,6 +3,7 @@ from PIL import Image
 import numpy as np
 import os
 import pickle
+import json
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--data_path", type=str, required=True)
