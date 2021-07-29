@@ -27,7 +27,7 @@ bathroom_name_only = png_only(list(sorted(os.listdir(bathroom_path))))
 kitchen = [os.path.join(kitchen_path, f) for f in kitchen_name_only]
 living = [os.path.join(living_path, f) for f in living_name_only]
 bedroom = [os.path.join(bedroom_path, f) for f in bedroom_name_only]
-bathroom = [os.path.join(bedroom_path, f) for f in bathroom_name_only]
+bathroom = [os.path.join(bathroom_path, f) for f in bathroom_name_only]
 #
 imgs = kitchen + living + bedroom + bathroom
 masks = [f.replace("images/", "masks/") for f in imgs]
