@@ -90,7 +90,7 @@ def evaluate(model, data_loader, device):
     print("coco evaluator loaded")
 
     count = 0
-    for image, targets in metric_logger.log_every(data_loader, 1, header):
+    for image, targets in metric_logger.log_every(data_loader, 100, header):
         #pickle.dump(image, open("image.p", "wb"))
         #pickle.dump(targets, open("targets.p", "wb"))
         #print("here working")
