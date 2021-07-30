@@ -51,7 +51,7 @@ def load_maskrcnn_resnet101_or_152_fpn(pretrained, backbone_num, **kwargs):
 
     if pretrained:
         # no need to download the backbone if pretrained is set
-        pretrained_backbone = False
+        pretrained_backbone = True
     if backbone_num == 101:
         backbone = resnet_fpn_backbone('resnet101', pretrained_backbone, trainable_layers=trainable_backbone_layers)
     elif backbone_num == 152:
