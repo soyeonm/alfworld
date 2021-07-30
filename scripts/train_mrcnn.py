@@ -296,30 +296,37 @@ def main(args):
     print("Starting sanity evaluation")
     if args.evaluate:
         epoch = -1
-        log_file, old_out = start_write_log_sys(log_name)
+        if not(args.no_logs):
+            log_file, old_out = start_write_log_sys(log_name)
         c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
-        end_write_log_sys(log_file, old_out)
+        del c
+        if not(args.no_logs):
+            end_write_log_sys(log_file, old_out)
 
     for epoch in range(num_epochs):
         print("Epoch ", epoch, "starting!")
         # train for one epoch, printing every 10 iterations
-        log_file, old_out = start_write_log_sys(log_name)
+        if not(args.no_logs):
+            log_file, old_out = start_write_log_sys(log_name)
         train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=10)
         # update the learning rate
         lr_scheduler.step()
         # # evaluate on the test dataset
         if args.evaluate:
             c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
+            del c 
         # save model
         model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
         torch.save(model.state_dict(), model_path)
         print("Saving %s" % model_path)
-        end_write_log_sys(log_file, old_out)
+        if not(args.no_logs):
+            end_write_log_sys(log_file, old_out)
 
     print("Done training!")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--no_logs", action='store_true')
     parser.add_argument("--backbone", type=int, default=50)
     parser.add_argument("--data_path", type=str, default="data/")
     parser.add_argument("--test_data_path", type=str, required=True)
