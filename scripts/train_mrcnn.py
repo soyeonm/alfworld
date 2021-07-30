@@ -211,9 +211,20 @@ def get_transform(train):
     return T.Compose(transforms)
 
 
+def write_log(logs, log_name):
+    f = open(log_name , "a")
+    for log in logs:
+        f.write(log + "\n")
+    f.close()
+
 def main(args):
     # train on the GPU or on the CPU, if a GPU is not available
     #torch.device("cuda:" + str(self.args.sem_seg_gpu) if args.cuda else "cpu")
+    if not os.path.exists(os.path.join(args.save_path, "logs")):
+        os.makedirs(os.path.join(args.save_path, "logs"))
+
+    log_name = os.path.join(args.save_path, "logs", args.save_name + "_log.txt")
+
     device = torch.device('cuda:' + str(args.gpu_num)) if torch.cuda.is_available() else torch.device('cpu')
 
     # our dataset has two classes only - background and person
@@ -267,8 +278,10 @@ def main(args):
 
     # let's train it for 10 epochs
     num_epochs = 10
-    #if args.evaluate:
-    #    evaluate(model, data_loader_test, device=device)
+    if args.evaluate:
+        epoch = -1
+        c, logs = evaluate(model, data_loader_test, device=device, epoch)
+        write_log(logs, log_name)
 
     for epoch in range(num_epochs):
         # train for one epoch, printing every 10 iterations
@@ -277,7 +290,8 @@ def main(args):
         lr_scheduler.step()
         # # evaluate on the test dataset
         if args.evaluate:
-            evaluate(model, data_loader_test, device=device)
+            c, logs = evaluate(model, data_loader_test, device=device, epoch)
+            write_log(logs, log_name)
         # save model
         model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
         torch.save(model.state_dict(), model_path)
