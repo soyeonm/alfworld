@@ -99,7 +99,7 @@ def get_model_instance_segmentation_different_backbone(num_classes, which_backbo
 
     model = MaskRCNN(
           backbone=backbone, 
-          num_classes=num_classes, 
+          #num_classes=num_classes, 
           rpn_anchor_generator=anchor_generator, 
           rpn_head = model.rpn.head,
           #box_predictor=box_predictor,
