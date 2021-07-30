@@ -280,7 +280,7 @@ def main(args):
     num_epochs = 10
     if args.evaluate:
         epoch = -1
-        c, logs = evaluate(model, data_loader_test, device=device, epoch)
+        c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
         write_log(logs, log_name)
 
     for epoch in range(num_epochs):
@@ -290,7 +290,7 @@ def main(args):
         lr_scheduler.step()
         # # evaluate on the test dataset
         if args.evaluate:
-            c, logs = evaluate(model, data_loader_test, device=device, epoch)
+            c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
             write_log(logs, log_name)
         # save model
         model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
