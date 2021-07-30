@@ -222,7 +222,7 @@ def start_write_log_sys(log_file_name):
 
     return log_file
 
-def end_write_log_sys(log_file)
+def end_write_log_sys(log_file):
 
     sys.stdout = old_stdout
 
