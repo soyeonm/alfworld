@@ -331,7 +331,7 @@ if args.val:
     len_walk = 0
     for dir_name, subdir_list, file_list in walk:
         len_walk +=1
-    idxes = np.random.choice(len_walk, 40, replace=False)
+    idxes = np.random.choice(len_walk, 10, replace=False)
     print("idxes is ", idxes) 
     #walk = [walk[i] for i in idxes]
     count_walk = 0
