@@ -220,9 +220,9 @@ def start_write_log_sys(log_file_name):
 
     sys.stdout = log_file
 
-    return log_file
+    return log_file, old_stdout
 
-def end_write_log_sys(log_file):
+def end_write_log_sys(log_file, old_stdout):
 
     sys.stdout = old_stdout
 
@@ -297,13 +297,13 @@ def main(args):
     num_epochs = 10
     if args.evaluate:
         epoch = -1
-        log_file = start_write_log_sys(log_name)
+        log_file, old_out = start_write_log_sys(log_name)
         c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
-        end_write_log_sys(log_file)
+        end_write_log_sys(log_file, old_out)
 
     for epoch in range(num_epochs):
         # train for one epoch, printing every 10 iterations
-        log_file = start_write_log_sys(log_name)
+        log_file, old_out = start_write_log_sys(log_name)
         train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=10)
         # update the learning rate
         lr_scheduler.step()
@@ -314,7 +314,7 @@ def main(args):
         model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
         torch.save(model.state_dict(), model_path)
         print("Saving %s" % model_path)
-        end_write_log_sys(log_file)
+        end_write_log_sys(log_file, old_out)
 
     print("Done training!")
 
