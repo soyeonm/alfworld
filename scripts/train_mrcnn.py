@@ -293,15 +293,15 @@ def main(args):
 
     # let's train it for 10 epochs
     num_epochs = 10
-    print("Starting sanity evaluation")
-    if args.evaluate:
-        epoch = -1
-        if not(args.no_logs):
-            log_file, old_out = start_write_log_sys(log_name)
-        c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
-        del c
-        if not(args.no_logs):
-            end_write_log_sys(log_file, old_out)
+    #print("Starting sanity evaluation")
+    #if args.evaluate:
+    #    epoch = -1
+    #    if not(args.no_logs):
+    #        log_file, old_out = start_write_log_sys(log_name)
+    #    c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
+    #    del c
+    #    if not(args.no_logs):
+    #        end_write_log_sys(log_file, old_out)
 
     for epoch in range(num_epochs):
         print("Epoch ", epoch, "starting!")
