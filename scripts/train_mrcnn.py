@@ -295,6 +295,7 @@ def main(args):
 
     # let's train it for 10 epochs
     num_epochs = 10
+    print("Starting sanity evaluation")
     if args.evaluate:
         epoch = -1
         log_file, old_out = start_write_log_sys(log_name)
@@ -302,6 +303,7 @@ def main(args):
         end_write_log_sys(log_file, old_out)
 
     for epoch in range(num_epochs):
+        print("Epoch ", epoch, "starting!")
         # train for one epoch, printing every 10 iterations
         log_file, old_out = start_write_log_sys(log_name)
         train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=10)
