@@ -292,7 +292,7 @@ def main(args):
                                                    gamma=0.1)
 
     # let's train it for 10 epochs
-    num_epochs = 10
+    num_epochs = args.num_epochs
     #print("Starting sanity evaluation")
     #if args.evaluate:
     #    epoch = -1
@@ -347,6 +347,8 @@ if __name__ == "__main__":
     parser.add_argument("--living_factor", type=float, default=1.0)
     parser.add_argument("--bedroom_factor", type=float, default=1.0)
     parser.add_argument("--bathroom_factor", type=float, default=1.0)
+
+    parser.add_argument("--num_epochs", type=int, default=10)
 
     parser.add_argument("--debug", action='store_true')
     args = parser.parse_args()
