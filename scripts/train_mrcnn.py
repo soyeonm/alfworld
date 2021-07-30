@@ -24,6 +24,8 @@ from alfworld.agents.detector.mrcnn import get_model_instance_segmentation, load
 
 import alfworld.gen.constants as constants
 import pickle
+import sys
+
 
 MIN_PIXELS = 100
 
@@ -211,6 +213,21 @@ def get_transform(train):
     return T.Compose(transforms)
 
 
+def start_write_log_sys(log_file_name):
+    old_stdout = sys.stdout
+
+    log_file = open(log_file_name,"a")
+
+    sys.stdout = log_file
+
+    return log_file
+
+def end_write_log_sys(log_file)
+
+    sys.stdout = old_stdout
+
+    log_file.close()
+
 def write_log(logs, log_name):
     f = open(log_name , "a")
     for log in logs:
@@ -280,22 +297,24 @@ def main(args):
     num_epochs = 10
     if args.evaluate:
         epoch = -1
+        log_file = start_write_log_sys(log_name)
         c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
-        write_log(logs, log_name)
+        end_write_log_sys(log_file)
 
     for epoch in range(num_epochs):
         # train for one epoch, printing every 10 iterations
+        log_file = start_write_log_sys(log_name)
         train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=10)
         # update the learning rate
         lr_scheduler.step()
         # # evaluate on the test dataset
         if args.evaluate:
             c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
-            write_log(logs, log_name)
         # save model
         model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
         torch.save(model.state_dict(), model_path)
         print("Saving %s" % model_path)
+        end_write_log_sys(log_file)
 
     print("Done training!")
 
