@@ -44,7 +44,7 @@ def _validate_trainable_layers(pretrained, trainable_backbone_layers, max_value,
 
 def load_maskrcnn_resnet101_or_152_fpn(pretrained, backbone_num, **kwargs):
     #default params
-    progress=True; num_classes=91; pretrained_backbone=True; trainable_backbone_layers=None
+    progress=True; num_classes=91; pretrained_backbone=True; trainable_backbone_layers=5
 
     trainable_backbone_layers = _validate_trainable_layers(
         pretrained or pretrained_backbone, trainable_backbone_layers, 5, 3)
