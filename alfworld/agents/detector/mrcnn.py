@@ -10,7 +10,8 @@ import torchvision.models as models
 from torchvision.models.utils import load_state_dict_from_url
 
 from torchvision.models.detection.faster_rcnn import FasterRCNN
-from torchvision.models.detection.backbone_utils import resnet_fpn_backbone, _validate_trainable_layers
+from torchvision.models.detection.backbone_utils import resnet_fpn_backbone
+import warnings
 
 import os
 import sys
@@ -23,6 +24,23 @@ model_urls = {
     'maskrcnn_resnet50_fpn_coco':
         'https://download.pytorch.org/models/maskrcnn_resnet50_fpn_coco-bf2d0c1e.pth',
 }
+
+
+def _validate_trainable_layers(pretrained, trainable_backbone_layers, max_value, default_value):
+    # dont freeze any layers if pretrained model or backbone is not used
+    if not pretrained:
+        if trainable_backbone_layers is not None:
+            warnings.warn(
+                "Changing trainable_backbone_layers has not effect if "
+                "neither pretrained nor pretrained_backbone have been set to True, "
+                "falling back to trainable_backbone_layers={} so that all layers are trainable".format(max_value))
+        trainable_backbone_layers = max_value
+
+    # by default freeze first blocks
+    if trainable_backbone_layers is None:
+        trainable_backbone_layers = default_value
+    assert 0 <= trainable_backbone_layers <= max_value
+    return trainable_backbone_layers
 
 def load_maskrcnn_resnet101_or_152_fpn(pretrained, backbone_num, **kwargs):
     #default params
