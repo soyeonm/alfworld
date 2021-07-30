@@ -20,7 +20,7 @@ from alfworld.agents.detector.engine import train_one_epoch, evaluate
 import alfworld.agents.detector.utils as utils
 import torchvision
 import alfworld.agents.detector.transforms as T
-from alfworld.agents.detector.mrcnn import get_model_instance_segmentation, load_pretrained_model
+from alfworld.agents.detector.mrcnn import get_model_instance_segmentation, load_pretrained_model, get_model_instance_segmentation_different_backbone
 
 import alfworld.gen.constants as constants
 import pickle
@@ -245,10 +245,13 @@ def main(args):
         collate_fn=utils.collate_fn)
 
     # get the model using our helper function
-    if len(args.load_model) > 0:
-        model = load_pretrained_model(args.load_model)
+    if args.backbone !=50:
+        model = get_model_instance_segmentation_different_backbone(num_classes, args.backbone)
     else:
-        model = get_model_instance_segmentation(num_classes)
+        if len(args.load_model) > 0:
+            model = load_pretrained_model(args.load_model)
+        else:
+            model = get_model_instance_segmentation(num_classes)
 
     # move model to the right device
     model.to(device)
@@ -284,6 +287,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--backbone", type=int, default=50)
     parser.add_argument("--data_path", type=str, default="data/")
     parser.add_argument("--test_data_path", type=str, required=True)
     parser.add_argument("--gpu_num", type=int, default=0)
