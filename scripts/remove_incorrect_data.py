@@ -30,8 +30,8 @@ bedroom = [os.path.join(bedroom_path, f) for f in bedroom_name_only]
 bathroom = [os.path.join(bathroom_path, f) for f in bathroom_name_only]
 #
 imgs = kitchen + living + bedroom + bathroom
-masks = [f.replace("images/", "masks/") for f in imgs]
-metas = [f.replace("images/", "meta/").replace(".png", ".json") for f in imgs]
+masks = [f.replace("/images/", "/masks/") for f in imgs]
+metas = [f.replace("/images/", "/meta/").replace(".png", ".json") for f in imgs]
 
 
 identifiers_broken_img =[]
