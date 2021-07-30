@@ -277,7 +277,7 @@ def main(args):
     if len(args.load_model) > 0:
         model = load_pretrained_model(args.load_model)
     else:
-        model = get_model_instance_segmentation(num_classes, args.back_bone)
+        model = get_model_instance_segmentation(num_classes, args.backbone)
 
     # move model to the right device
     model.to(device)
