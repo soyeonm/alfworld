@@ -69,7 +69,7 @@ def _get_iou_types(model):
 
 def print_log(*statements):
     statements = [str(s) for s in statements]
-    statements = ['step #: ', str(self.steps_taken) , ","] + statements
+    #statements = ['step #: ', str(self.steps_taken) , ","] + statements
     joined = ' '.join(statements)
     print(joined)
     return joined
