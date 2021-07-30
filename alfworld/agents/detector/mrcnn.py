@@ -102,7 +102,7 @@ def get_model_instance_segmentation_different_backbone(num_classes, which_backbo
           num_classes=num_classes, 
           rpn_anchor_generator=anchor_generator, 
           rpn_head = model.rpn.head,
-          box_predictor=box_predictor,
+          #box_predictor=box_predictor,
           mask_predictor=mask_predictor,
           box_roi_pool=roi_pooler #Just set everything else to model.attribute
           )
