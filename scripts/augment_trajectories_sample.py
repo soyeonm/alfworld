@@ -327,7 +327,7 @@ data_path = os.path.expandvars(args.data_path)
 if args.val:
     walk = walklevel(data_path, level=2)
     #walk_copy = copy.deepcopy(walklevel(data_path, level=2))
-    np.random.seed(1)
+    np.random.seed(2)
     len_walk = 0
     for dir_name, subdir_list, file_list in walk:
         len_walk +=1
