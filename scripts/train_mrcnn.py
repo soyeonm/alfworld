@@ -122,6 +122,8 @@ class AlfredDataset(object):
         #print("img_path is", img_path)
         
         img = Image.open(img_path).convert("RGB")
+        if self.args.sanity_check:
+            pickle.dump(img, open("real_training_img.p", "wb"))
         if args.resize:
             img.resize((300,300))
             
@@ -349,6 +351,8 @@ if __name__ == "__main__":
     parser.add_argument("--bathroom_factor", type=float, default=1.0)
 
     parser.add_argument("--num_epochs", type=int, default=10)
+
+    parser.add_argument("--sanity_check", action = "store_true")
 
     parser.add_argument("--debug", action='store_true')
     args = parser.parse_args()
