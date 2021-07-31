@@ -123,7 +123,7 @@ class AlfredDataset(object):
         
         img = Image.open(img_path).convert("RGB")
         if self.args.sanity_check:
-            pickle.dump(img, open("real_training_img.p", "wb"))
+            cv2.imwrite("real_training_img.png", img)
         if args.resize:
             img.resize((300,300))
             
