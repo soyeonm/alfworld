@@ -168,7 +168,7 @@ def get_model_instance_segmentation(num_classes, backbone):
 
 
 
-def load_pretrained_model(path):
-    mask_rcnn = get_model_instance_segmentation(len(constants.OBJECTS_DETECTOR)+1)
+def load_pretrained_model(path, backbone):
+    mask_rcnn = get_model_instance_segmentation(len(constants.OBJECTS_DETECTOR)+1, backbone)
     mask_rcnn.load_state_dict(torch.load(path))
     return mask_rcnn
