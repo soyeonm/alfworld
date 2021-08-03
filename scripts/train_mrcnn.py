@@ -165,6 +165,7 @@ class AlfredDataset(object):
                     class_idx = self.object_classes.index(object_class)
 
                     masks.append(smask)
+                    pickle.dump(masks, open("masks_" + str(idx) + ".p", "wb"))
                     boxes.append([xmin, ymin, xmax, ymax])
                     labels.append(class_idx)
 
