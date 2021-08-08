@@ -44,6 +44,7 @@ AUGMENTED_TRAJ_DATA_JSON_FILENAME = "augmented_traj_data.json"
 
 IMAGES_FOLDER = "images"
 DEPTH_FOLDER = "depths"
+HORIZON_FOLDER = "hors"
 MASKS_FOLDER = "masks"
 META_FOLDER = "meta"
 
@@ -79,6 +80,9 @@ def save_image(event, save_path):
     rgb_image = event.frame[:, :, ::-1]
     depth_save_path = os.path.join(save_path, DEPTH_FOLDER)
     depth_image = event.depth_frame
+    horizon_save_path = os.path.join(save_path, HORIZON_FOLDER)
+    horizon = event.metadata['agent']['cameraHorizon']
+
     # masks
     mask_save_path = os.path.join(save_path, MASKS_FOLDER)
     mask_image = event.instance_segmentation_frame
@@ -87,6 +91,7 @@ def save_image(event, save_path):
     im_ind = get_image_index(rgb_save_path)
     cv2.imwrite(rgb_save_path + '/%09d.png' % im_ind, rgb_image); pickle.dump(depth_image, open(depth_save_path + '/depth' + '%09d.p' % im_ind, 'wb'))
     cv2.imwrite(mask_save_path + '/%09d.png' % im_ind, mask_image)
+    pickle.dump(horizon, open(horizon_save_path + '/horizon' + '%09d.p' % im_ind, 'wb'))
     return im_ind
 
 
@@ -180,11 +185,13 @@ def augment_traj(env, json_file, count):
     mask_dir = os.path.join(root_dir, MASKS_FOLDER)
     meta_dir = os.path.join(root_dir, META_FOLDER)
     depth_dir = os.path.join(root_dir, DEPTH_FOLDER)
+    hor_dir = os.path.join(root_dir, HORIZON_FOLDER)
 
     clear_and_create_dir(imgs_dir)
     clear_and_create_dir(mask_dir)
     clear_and_create_dir(meta_dir)
     clear_and_create_dir(depth_dir)
+    clear_and_create_dir(hor_dir)
 
     explored_len = 2*explore_scene(env, traj_data, root_dir)/2
 
