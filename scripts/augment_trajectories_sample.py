@@ -253,7 +253,7 @@ def augment_traj(env, json_file, count):
             #print("idx ", idx, " horizon is ", env.last_event.metadata['agent']['cameraHorizon'])
             #Rotate back 
 
-            chosen_45 =  np.choose(4)
+            chosen_45 =  np.random.choice(4)
             if chosen_45 == 0:
                 event = env.set_horizon(45); save_frame(env, event, root_dir)
                 idx = get_image_index(root_dir)
