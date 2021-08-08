@@ -242,6 +242,20 @@ def augment_traj(env, json_file, count):
             idx = get_image_index(root_dir)
             #print("idx ", idx, " horizon is ", env.last_event.metadata['agent']['cameraHorizon'])
             #Rotate back 
+
+            for ri in range(2):
+                env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+
+            hor_idx = np.random.choice(2)
+            #for hor in [0,15,30]:
+            hor = [0,15][hor_idx]
+                #if abs(hor-cur_hor)> 5:
+            event = env.set_horizon(hor); save_frame(env, event, root_dir)
+            idx = get_image_index(root_dir)
+
+            for ri in range(2):
+                env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+
             for ri in range(keep_ri+1):
                 env.step(dict(action="RotateRight", degrees = "90", forceAction=True))
             env.set_horizon(cur_hor)
