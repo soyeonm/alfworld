@@ -288,8 +288,8 @@ def augment_traj(env, json_file, count):
             event = env.step(cmd)
 
         else:
+            new_event = env.step(cmd)
             if np.random.choice(2) ==0:
-                new_event = env.step(cmd)
                 if env.last_event.metadata['agent']['cameraHorizon'] >=0:
                     save_frame(env, event, root_dir)
                     #save_frame(env, new_event, root_dir)
@@ -299,6 +299,7 @@ def augment_traj(env, json_file, count):
                     save_frame(env, event, root_dir)
                     for ri in range(2):
                         event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+            event = new_event
 
 
 
