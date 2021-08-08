@@ -24,6 +24,7 @@ parser.add_argument('--reward_config', type=str, default='alfworld/agents/config
 parser.add_argument('--pick_few', dest='pick_few', action='store_true')
 parser.add_argument('--val', dest='val', action='store_true')
 parser.add_argument('--local', dest='local', action='store_true')
+parser.add_argument('--imgae_300', dest='imgae_300', action='store_true')
 args = parser.parse_args()
 
 
@@ -50,6 +51,9 @@ META_FOLDER = "meta"
 
 IMAGE_WIDTH = 400
 IMAGE_HEIGHT = 400
+if args.imgae_300:
+    IMAGE_WIDTH = 300
+    IMAGE_HEIGHT = 300
 
 render_settings = dict()
 render_settings['renderImage'] = True
