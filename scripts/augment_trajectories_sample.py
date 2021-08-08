@@ -146,8 +146,10 @@ def explore_scene(env, traj_data, root_dir):
                   'rotation': point[2],
                   'horizon': point[3]}
         event = env.step(action)
-        print("horizon is ", point[3])
-        save_frame(env, event, root_dir)
+        
+        if horizon >=0:
+            print("horizon is ", point[3])
+            save_frame(env, event, root_dir)
         event = env.set_horizon(60)
         save_frame(env, event, root_dir)
 
@@ -276,14 +278,15 @@ def augment_traj(env, json_file, count):
 
         else:
             new_event = env.step(cmd)
-            save_frame(env, event, root_dir)
-            #save_frame(env, new_event, root_dir)
-            event = new_event
-            for ri in range(2):
-                event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
-            save_frame(env, event, root_dir)
-            for ri in range(2):
-                event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+            if env.last_event.metadata['agent']['cameraHorizon'] >=0:
+                save_frame(env, event, root_dir)
+                #save_frame(env, new_event, root_dir)
+                event = new_event
+                for ri in range(2):
+                    event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+                save_frame(env, event, root_dir)
+                for ri in range(2):
+                    event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
 
 
 
