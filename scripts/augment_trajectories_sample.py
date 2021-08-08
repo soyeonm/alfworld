@@ -30,7 +30,7 @@ args = parser.parse_args()
 if args.local:
     sys.path.append('/Users/soyeonmin/Documents/alfworld_soyeonm/alfworld')
 else:
-    sys.path.append('/home/soyeonm/alfworld')
+    sys.path.append('/home/root/alfworld')
 import alfworld.gen
 import alfworld.gen.constants as constants
 from alfworld.gen.utils.video_util import VideoSaver
