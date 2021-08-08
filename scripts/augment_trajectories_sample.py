@@ -277,8 +277,15 @@ def augment_traj(env, json_file, count):
         else:
             new_event = env.step(cmd)
             save_frame(env, event, root_dir)
-            save_frame(env, new_event, root_dir)
+            #save_frame(env, new_event, root_dir)
             event = new_event
+            for ri in range(2):
+                event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+            save_frame(env, event, root_dir)
+            for ri in range(2):
+                event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+
+
 
         if not event.metadata['lastActionSuccess']:
             raise Exception("Replay Failed: %s" % (env.last_event.metadata['errorMessage']))
