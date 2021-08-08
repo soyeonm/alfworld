@@ -147,7 +147,7 @@ def explore_scene(env, traj_data, root_dir):
                   'horizon': point[3]}
         event = env.step(action)
         
-        if horizon >=0:
+        if point[3] >=0:
             print("horizon is ", point[3])
             save_frame(env, event, root_dir)
         event = env.set_horizon(60)
