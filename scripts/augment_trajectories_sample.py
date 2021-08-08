@@ -258,6 +258,9 @@ def augment_traj(env, json_file, count):
                 event = env.set_horizon(45); save_frame(env, event, root_dir)
                 idx = get_image_index(root_dir)
 
+                event = env.set_horizon(60); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
             for ri in range(2):
                 env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
 
@@ -270,6 +273,9 @@ def augment_traj(env, json_file, count):
 
             if chosen_45 == 0:
                 event = env.set_horizon(45); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                event = env.set_horizon(60); save_frame(env, event, root_dir)
                 idx = get_image_index(root_dir)
 
             for ri in range(2):
