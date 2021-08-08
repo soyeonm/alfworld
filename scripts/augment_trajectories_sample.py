@@ -214,6 +214,8 @@ def augment_traj(env, json_file, count):
     env.set_task(traj_data, args, reward_type='dense')
     rewards = []
     prop = int(len(traj_data['plan']['low_actions'])/ explored_len) 
+    if prop == 0:
+        prop +=1
     print("prop is ", prop)
     for ll_idx, ll_action in enumerate(traj_data['plan']['low_actions']):
         count +=1
@@ -251,6 +253,11 @@ def augment_traj(env, json_file, count):
             #print("idx ", idx, " horizon is ", env.last_event.metadata['agent']['cameraHorizon'])
             #Rotate back 
 
+            chosen_45 =  np.choose(4)
+            if chosen_45 == 0:
+                event = env.set_horizon(45); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
             for ri in range(2):
                 env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
 
@@ -260,6 +267,10 @@ def augment_traj(env, json_file, count):
                 #if abs(hor-cur_hor)> 5:
             event = env.set_horizon(hor); save_frame(env, event, root_dir)
             idx = get_image_index(root_dir)
+
+            if chosen_45 == 0:
+                event = env.set_horizon(45); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
 
             for ri in range(2):
                 env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
@@ -277,16 +288,17 @@ def augment_traj(env, json_file, count):
             event = env.step(cmd)
 
         else:
-            new_event = env.step(cmd)
-            if env.last_event.metadata['agent']['cameraHorizon'] >=0:
-                save_frame(env, event, root_dir)
-                #save_frame(env, new_event, root_dir)
-                event = new_event
-                for ri in range(2):
-                    event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
-                save_frame(env, event, root_dir)
-                for ri in range(2):
-                    event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+            if np.random.choice(2) ==0:
+                new_event = env.step(cmd)
+                if env.last_event.metadata['agent']['cameraHorizon'] >=0:
+                    save_frame(env, event, root_dir)
+                    #save_frame(env, new_event, root_dir)
+                    event = new_event
+                    for ri in range(2):
+                        event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+                    save_frame(env, event, root_dir)
+                    for ri in range(2):
+                        event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
 
 
 
