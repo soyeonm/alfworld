@@ -88,13 +88,13 @@ def save_image(event, save_path):
     horizon = event.metadata['agent']['cameraHorizon']
 
     # masks
-    mask_save_path = os.path.join(save_path, MASKS_FOLDER)
-    mask_image = event.instance_segmentation_frame
+    #mask_save_path = os.path.join(save_path, MASKS_FOLDER)
+    #mask_image = event.instance_segmentation_frame
 
     # dump images
     im_ind = get_image_index(rgb_save_path)
     cv2.imwrite(rgb_save_path + '/%09d.png' % im_ind, rgb_image); pickle.dump(depth_image, open(depth_save_path + '/depth' + '%09d.p' % im_ind, 'wb'))
-    cv2.imwrite(mask_save_path + '/%09d.png' % im_ind, mask_image)
+    #cv2.imwrite(mask_save_path + '/%09d.png' % im_ind, mask_image)
     pickle.dump(horizon, open(horizon_save_path + '/horizon' + '%09d.p' % im_ind, 'wb'))
     return im_ind
 
@@ -150,6 +150,12 @@ def explore_scene(env, traj_data, root_dir):
         save_frame(env, event, root_dir)
         event = env.set_horizon(60)
         save_frame(env, event, root_dir)
+
+        for ri in range(2):
+            env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+        event = env.set_horizon(0)
+        save_frame(env, event, root_dir)
+
 
     return len(openable_points)
 
