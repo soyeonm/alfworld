@@ -225,7 +225,7 @@ def augment_traj(env, json_file, count):
         # remove unnecessary keys
         cmd = {k: cmd[k] for k in ['action', 'objectId', 'receptacleObjectId', 'placeStationary', 'forceAction'] if k in cmd}
 
-        elif "MoveAhead" in cmd['action']:
+        if "MoveAhead" in cmd['action']:
             event = env.step(cmd)
 
         elif "Rotate" in cmd['action']:
