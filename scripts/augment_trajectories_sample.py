@@ -293,8 +293,8 @@ def augment_traj(env, json_file, count):
             for ri in range(keep_ri+1):
                 env.step(dict(action="RotateRight", degrees = "90", forceAction=True))
             env.set_horizon(cur_hor)
-            
-        if "MoveAhead" in cmd['action']:
+
+        elif "MoveAhead" in cmd['action']:
             event = env.step(cmd)
 
         elif "Rotate" in cmd['action']:
