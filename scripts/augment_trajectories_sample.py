@@ -137,26 +137,27 @@ def explore_scene(env, traj_data, root_dir):
     openable_points = get_openable_points(traj_data)
     agent_height = env.last_event.metadata['agent']['position']['y']
     for recep_id, point in openable_points.items():
-        recep_class = recep_id.split("|")[0]
-        action = {'action': 'TeleportFull',
-                  'x': point[0],
-                  'y': agent_height,
-                  'z': point[1],
-                  'rotateOnTeleport': False,
-                  'rotation': point[2],
-                  'horizon': point[3]}
-        event = env.step(action)
-        
-        if point[3] >=0:
-            print("horizon is ", point[3])
+        if np.random.choice(2) ==0:
+            recep_class = recep_id.split("|")[0]
+            action = {'action': 'TeleportFull',
+                      'x': point[0],
+                      'y': agent_height,
+                      'z': point[1],
+                      'rotateOnTeleport': False,
+                      'rotation': point[2],
+                      'horizon': point[3]}
+            event = env.step(action)
+            
+            if point[3] >=0:
+                print("horizon is ", point[3])
+                save_frame(env, event, root_dir)
+            event = env.set_horizon(60)
             save_frame(env, event, root_dir)
-        event = env.set_horizon(60)
-        save_frame(env, event, root_dir)
 
-        for ri in range(2):
-            env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
-        event = env.set_horizon(0)
-        save_frame(env, event, root_dir)
+            for ri in range(2):
+                env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+            event = env.set_horizon(0)
+            save_frame(env, event, root_dir)
 
 
     return len(openable_points)
@@ -205,7 +206,8 @@ def augment_traj(env, json_file, count):
     clear_and_create_dir(depth_dir)
     clear_and_create_dir(hor_dir)
 
-    explored_len = 2*explore_scene(env, traj_data, root_dir)/2
+    #explored_len = 2*explore_scene(env, traj_data, root_dir)/2
+    #explored_len = 100
 
     env.step(dict(traj_data['scene']['init_action']))
     # print("Task: %s" % (traj_data['template']['task_desc']))
@@ -213,7 +215,7 @@ def augment_traj(env, json_file, count):
     # setup task
     env.set_task(traj_data, args, reward_type='dense')
     rewards = []
-    prop = int(len(traj_data['plan']['low_actions'])/ explored_len) 
+    prop = 3
     if prop == 0:
         prop +=1
     print("prop is ", prop)
@@ -253,8 +255,11 @@ def augment_traj(env, json_file, count):
             #print("idx ", idx, " horizon is ", env.last_event.metadata['agent']['cameraHorizon'])
             #Rotate back 
 
-            chosen_45 =  np.random.choice(4)
+            chosen_45 =  np.random.choice(2)
             if chosen_45 == 0:
+                event = env.set_horizon(30); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
                 event = env.set_horizon(45); save_frame(env, event, root_dir)
                 idx = get_image_index(root_dir)
 
@@ -272,6 +277,10 @@ def augment_traj(env, json_file, count):
             idx = get_image_index(root_dir)
 
             if chosen_45 == 0:
+                event = env.set_horizon(30); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+
                 event = env.set_horizon(45); save_frame(env, event, root_dir)
                 idx = get_image_index(root_dir)
 
@@ -296,15 +305,46 @@ def augment_traj(env, json_file, count):
         else:
             new_event = env.step(cmd)
             if np.random.choice(2) ==0:
-                if env.last_event.metadata['agent']['cameraHorizon'] >=0:
-                    save_frame(env, event, root_dir)
-                    #save_frame(env, new_event, root_dir)
-                    event = new_event
-                    for ri in range(2):
-                        event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
-                    save_frame(env, event, root_dir)
-                    for ri in range(2):
-                        event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+                cur_hor =  env.last_event.metadata['agent']['cameraHorizon']
+                event = env.set_horizon(0); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                event = env.set_horizon(15); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                event = env.set_horizon(30); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                event = env.set_horizon(45); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                event = env.set_horizon(60); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                #save_frame(env, new_event, root_dir)
+                event = new_event
+                for ri in range(2):
+                    event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+                
+                event = env.set_horizon(0); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                event = env.set_horizon(15); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                event = env.set_horizon(30); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                event = env.set_horizon(45); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                event = env.set_horizon(60); save_frame(env, event, root_dir)
+                idx = get_image_index(root_dir)
+
+                for ri in range(2):
+                    event = env.step(dict(action="RotateLeft", degrees = "90", forceAction=True)) 
+
+                env.set_horizon(cur_hor)
             event = new_event
 
 
