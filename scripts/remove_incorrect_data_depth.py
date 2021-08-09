@@ -82,6 +82,8 @@ for room_type in dict_identifier:
 
 #Remove all the broken ones
 #get paths first
+#Remove all the broken ones
+#get paths first
 delete_images = []; delete_masks=[]; delete_metas=[]
 for r, identifier_list in dict_identifier.items():
 	for identifier in identifier_list:
@@ -90,15 +92,14 @@ for r, identifier_list in dict_identifier.items():
 		file_path = identifier + '.png'
 		delete_images.append(os.path.join(folder_path, file_path))
 		#
-		folder_path = os.path.join(root, r, 'masks')
-		file_path = identifier + '.png'
+		folder_path = os.path.join(root, r, 'depths')
+		file_path = 'depth' + identifier + '.p'
 		delete_masks.append(os.path.join(folder_path, file_path))
 		#
-		folder_path = os.path.join(root, r, 'meta')
-		file_path = identifier + '.json'
+		folder_path = os.path.join(root, r, 'hors')
+		file_path = 'horizon' + identifier + '.p'
 		delete_metas.append(os.path.join(folder_path, file_path))
 
 for p1, p2, p3 in zip(delete_images,delete_masks, delete_metas):
 	assert os.path.exists(p1); assert os.path.exists(p2); assert os.path.exists(p3)
 	os.remove(p1); os.remove(p2); os.remove(p3)
-
