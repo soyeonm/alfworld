@@ -106,12 +106,12 @@ for r, identifier_list in dict_identifier.items():
 		file_path = identifier + '.png'
 		delete_images.append(os.path.join(folder_path, file_path))
 		#
-		folder_path = os.path.join(root, r, 'masks')
-		file_path = identifier + '.png'
+		folder_path = os.path.join(root, r, 'depths')
+		file_path = 'depth' + identifier + '.p'
 		delete_masks.append(os.path.join(folder_path, file_path))
 		#
-		folder_path = os.path.join(root, r, 'meta')
-		file_path = identifier + '.json'
+		folder_path = os.path.join(root, r, 'hors')
+		file_path = 'horizon' + identifier + '.p'
 		delete_metas.append(os.path.join(folder_path, file_path))
 
 for p1, p2, p3 in zip(delete_images,delete_masks, delete_metas):
