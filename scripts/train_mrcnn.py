@@ -93,6 +93,18 @@ class AlfredDataset(object):
             min_size = int(len(kitchen)/4)
             kitchen = [k for i,k in enumerate(kitchen) if i %4 == 0]
 
+        if not(train_dataset):
+            #just keep 1000
+            ka = int(len(kitchen) / 1000)
+            la = int(len(living) / 1000)
+            bea = int(len(bedroom) / 1000)
+            baa = int(len(bathroom) / 1000)
+            kitchen = [k for i,k in enumerate(kitchen) if i % ka == 0]
+            living = [k for i,k in enumerate(living) if i % la == 0]
+            bedroom = [k for i,k in enumerate(bedroom) if i % bea == 0]
+            bathroom = [k for i,k in enumerate(bedroom) if i % baa == 0]
+
+
         self.imgs = kitchen + living + bedroom + bathroom
         self.masks = [f.replace("/images/", "/masks/") for f in self.imgs]
         self.metas = [f.replace("/images/", "/meta/").replace(".png", ".json") for f in self.imgs]
