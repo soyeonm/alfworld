@@ -101,8 +101,8 @@ class AlfredDataset(object):
             baa = int(len(bathroom) / 1000)
             kitchen = [k for i,k in enumerate(kitchen) if i % ka == 0]
             living = [k for i,k in enumerate(living) if i % la == 0]
-            bedroom = [k for i,k in enumerate(bedroom) if i % bea == 0]
-            bathroom = [k for i,k in enumerate(bedroom) if i % baa == 0]
+            bedroom = [k for i,k in enumerate(bedroom)]# if i % bea == 0]
+            bathroom = [k for i,k in enumerate(bedroom)]# if i % baa == 0]
 
 
         self.imgs = kitchen + living + bedroom + bathroom
