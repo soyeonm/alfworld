@@ -91,9 +91,7 @@ class AlfredDataset(object):
 
         if self.args.balance_scenes or not(train_dataset):
             min_size = int(len(kitchen)/4)
-            np.random.seed(0)
-            a = np.random.permutation(len(kitchen)).tolist()[:min_size]
-            kitchen = [k for i,k in enumerate(kitchen) if i in a]
+            kitchen = [k for i,k in enumerate(kitchen) if i %4 == 0]
 
         self.imgs = kitchen + living + bedroom + bathroom
         self.masks = [f.replace("/images/", "/masks/") for f in self.imgs]
