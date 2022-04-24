@@ -75,7 +75,7 @@ class AlfredDataset(object):
         return [f for f in file_list if f[-4:] == '.png']
 
 
-    def gt_data_files_teach(self, root):
+    def gt_data_files_teach(self, root, balance_scenes=False, train_dataset=False):
         kitchen_path = os.path.join(root, 'kitchen')#, 'images')
         living_path = os.path.join(root, 'living')# 'images')
         bedroom_path = os.path.join(root, 'bedroom')#, 'images')
@@ -89,7 +89,7 @@ class AlfredDataset(object):
         bathroom = glob(bathroom_path + '/*/images/*.png')
 
 
-        if self.args.balance:
+        if self.args.balance_scenes or not(train_dataset):
             min_size = int(len(kitchen)/4)
             np.random.seed(0)
             a = np.random.permutation(len(kitchen)).tolist()[:min_size]
