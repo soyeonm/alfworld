@@ -68,14 +68,14 @@ class AlfredDataset(object):
 
         # load all image files, sorting them to
         # ensure that they are aligned
-        self.get_data_files(root, balance_scenes=args.balance_scenes, train_dataset=train_dataset)
+        self.get_data_files_teach(root, balance_scenes=args.balance_scenes, train_dataset=train_dataset)
 
 
     def png_only(self, file_list):
         return [f for f in file_list if f[-4:] == '.png']
 
 
-    def gt_data_files_teach(self, root, balance_scenes=False, train_dataset=False):
+    def get_data_files_teach(self, root, balance_scenes=False, train_dataset=False):
         kitchen_path = os.path.join(root, 'kitchen')#, 'images')
         living_path = os.path.join(root, 'living')# 'images')
         bedroom_path = os.path.join(root, 'bedroom')#, 'images')
