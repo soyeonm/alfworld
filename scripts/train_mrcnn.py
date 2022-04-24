@@ -20,7 +20,7 @@ from alfworld.agents.detector.engine import train_one_epoch, evaluate
 import alfworld.agents.detector.utils as utils
 import torchvision
 import alfworld.agents.detector.transforms as T
-from alfworld.agents.detector.mrcnn import get_model_instance_segmentation, load_pretrained_model
+from alfworld.agents.detector.mrcnn import get_model_instance_segmentation#, load_pretrained_model
 
 import alfworld.gen.constants as constants
 import pickle
@@ -32,6 +32,22 @@ MIN_PIXELS = 100
 OBJECTS_DETECTOR = constants.OBJECTS_DETECTOR
 STATIC_RECEPTACLES = constants.STATIC_RECEPTACLES
 ALL_DETECTOR = constants.ALL_DETECTOR
+recep_path = os.environ['RECEP_PATH']
+obj_path = os.environ['OBJ_PATH']
+
+
+def load_pretrained_model(device, which_type):
+    if which_type == 'obj':
+        categories = len(object_detector_objs)
+        path = obj_path
+    elif which_type =='recep':
+        categories = 32
+        path = recep_path
+    mask_rcnn = get_model_instance_segmentation(categories+1)
+    #pickle.dump(torch.load(path, map_location=device), open("loaded.p", "wb"))
+    mask_rcnn.load_state_dict(torch.load(path, map_location=device))
+    return mask_rcnn
+
 
 def get_object_classes(object_type):
     if object_type == "objects":
