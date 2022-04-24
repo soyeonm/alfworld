@@ -26,6 +26,8 @@ import alfworld.gen.constants as constants
 import pickle
 import sys
 
+from glob import glob
+
 
 MIN_PIXELS = 100
 
@@ -72,6 +74,30 @@ class AlfredDataset(object):
     def png_only(self, file_list):
         return [f for f in file_list if f[-4:] == '.png']
 
+
+    def gt_data_files_teach(self, root):
+        kitchen_path = os.path.join(root, 'kitchen')#, 'images')
+        living_path = os.path.join(root, 'living')# 'images')
+        bedroom_path = os.path.join(root, 'bedroom')#, 'images')
+        bathroom_path = os.path.join(root, 'bathroom')#, 'images')
+
+
+
+        kitchen = glob(kitchen_path + '/*/images/*.png')
+        living = glob(living_path + '/*/images/*.png')
+        bedroom = glob(bedroom_path + '/*/images/*.png')
+        bathroom = glob(bathroom_path + '/*/images/*.png')
+
+
+        if self.args.balance:
+            min_size = int(len(kitchen)/4)
+            np.random.seed(0)
+            a = np.random.permutation(len(kitchen)).tolist()[:min_size]
+            kitchen = [k for i,k in enumerate(kitchen) if i in a]
+
+        self.imgs = kitchen + living + bedroom + bathroom
+        self.masks = [f.replace("/images/", "/masks/") for f in self.imgs]
+        self.metas = [f.replace("/images/", "/meta/").replace(".png", ".json") for f in self.imgs]
 
     def get_data_files(self, root, balance_scenes=False, train_dataset=False):
         #if balance_scenes and train_dataset:
