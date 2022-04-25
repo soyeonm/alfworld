@@ -179,14 +179,15 @@ class AlfredDataset(object):
         if not(train_dataset):
             #just keep 1000
             print("Total is ", len(kitchen+living + bedroom + bathroom))
-            ka = int(len(kitchen) / 10000)
-            la = int(len(living) / 2000)
-            bea = int(len(bedroom) / 2000)
-            baa = int(len(bathroom) / 2000)
+            ka = int(len(kitchen) / 10)
+            la = int(len(living) / 10)
+            bea = int(len(bedroom))
+            baa = int(len(bathroom))
             kitchen = [k for i,k in enumerate(kitchen) if i % ka == 0]
             living = [k for i,k in enumerate(living) if i % la == 0]
             bedroom = [k for i,k in enumerate(bedroom)]# if i % bea == 0]
             bathroom = [k for i,k in enumerate(bedroom)]# if i % baa == 0]
+            print("Total after is ", len(kitchen+living + bedroom + bathroom))
 
 
         self.imgs = kitchen + living + bedroom + bathroom
@@ -452,12 +453,13 @@ def main(args):
         # update the learning rate
         lr_scheduler.step()
         # # evaluate on the test dataset
+        model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
+        torch.save(model.state_dict(), model_path)
         if args.evaluate:
             c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
             del c 
         # save model
-        model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
-        torch.save(model.state_dict(), model_path)
+        
         print("Saving %s" % model_path)
         if not(args.no_logs):
             end_write_log_sys(log_file, old_out)
