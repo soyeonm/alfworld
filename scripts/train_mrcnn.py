@@ -89,9 +89,11 @@ class AlfredDataset(object):
         bathroom = glob(bathroom_path + '/*/images/*.png')
 
 
-        if self.args.balance_scenes or not(train_dataset):
-            min_size = int(len(kitchen)/4)
-            kitchen = [k for i,k in enumerate(kitchen) if i %4 == 0]
+        #if self.args.balance_scenes or not(train_dataset):
+        min_size = int(len(kitchen)/4)
+        kitchen = [k for i,k in enumerate(kitchen) if i % self.args.kitchen_sample_factor == 0]
+
+        living = [k for i,k in enumerate(living) if i %self.args.living_sample_factor == 0]
 
         if not(train_dataset):
             #just keep 1000
@@ -398,6 +400,8 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--lr", type=float, default=0.005)
 
+    parser.add_argument("--kitchen_sample_factor", type=int)
+    parser.add_argument("--living_sample_factor", type=int)
     parser.add_argument("--balance_scenes", action='store_true')
     parser.add_argument("--kitchen_factor", type=float, default=1.0)
     parser.add_argument("--living_factor", type=float, default=1.0)
