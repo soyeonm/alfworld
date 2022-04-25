@@ -332,10 +332,10 @@ def main(args):
 
     # get the model using our helper function
 
-    if len(args.load_model) > 0:
-        model = load_pretrained_model(num_classes,args.load_model, args.backbone)
-    else:
-        model = get_model_instance_segmentation(num_classes, args.backbone)
+    #if len(args.load_model) > 0:
+    model = load_pretrained_model(num_classes,args.load_model, args.backbone)
+    #else:
+    #    model = get_model_instance_segmentation(num_classes, args.backbone)
 
     # move model to the right device
     model.to(device)
