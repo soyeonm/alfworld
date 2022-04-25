@@ -115,6 +115,7 @@ def get_model_instance_segmentation(num_classes):
                                                        hidden_layer,
                                                        num_classes)
 
+    return model
 
 def load_pretrained_model(device):
     if args.object_types == "objects":
