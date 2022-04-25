@@ -20,6 +20,7 @@ from alfworld.agents.detector.engine import train_one_epoch, evaluate
 import alfworld.agents.detector.utils as utils
 import torchvision
 #from alfworld.agents.detector.mrcnn import get_model_instance_segmentation#, load_pretrained_model
+import alfworld.agents.detector.transforms as T
 
 import alfworld.gen.constants as constants
 import pickle
