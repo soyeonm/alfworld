@@ -48,6 +48,7 @@ def load_pretrained_model(device, which_type):
     mask_rcnn = get_model_instance_segmentation(categories+1)
     #pickle.dump(torch.load(path, map_location=device), open("loaded.p", "wb"))
     mask_rcnn.load_state_dict(torch.load(path, map_location=device))
+    print("LOADED MODELS!")
     return mask_rcnn
 
 
