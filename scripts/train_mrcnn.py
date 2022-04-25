@@ -38,11 +38,11 @@ recep_path = os.environ['RECEP_PATH']
 obj_path = os.environ['OBJ_PATH']
 
 
-def load_pretrained_model(device, which_type):
-    if which_type == 'obj':
+def load_pretrained_model(device):
+    if args.object_types == "objects":
         categories = len(object_detector_objs)
         path = obj_path
-    elif which_type =='recep':
+    elif args.object_types =="receptacles":
         categories = 32
         path = recep_path
     mask_rcnn = get_model_instance_segmentation(categories+1)
@@ -333,7 +333,7 @@ def main(args):
     # get the model using our helper function
 
     #if len(args.load_model) > 0:
-    model = load_pretrained_model(num_classes,args.load_model, args.backbone)
+    model = load_pretrained_model(device)
     #else:
     #    model = get_model_instance_segmentation(num_classes, args.backbone)
 
