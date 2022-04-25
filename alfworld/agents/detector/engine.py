@@ -28,7 +28,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
     count = 0
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
-        print("Loaded first img")
+        #print("Loaded first img")
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
@@ -41,8 +41,8 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         losses_reduced = sum(loss for loss in loss_dict_reduced.values())
 
         loss_value = losses_reduced.item()
-        if count % 100 == 0:
-            print("Count: ", count, ", Loss is ", loss_value)
+        #if count % 100 == 0:
+        #    print("Count: ", count, ", Loss is ", loss_value)
 
         if not math.isfinite(loss_value):
             print("Loss is {}, stopping training".format(loss_value))
