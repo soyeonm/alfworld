@@ -123,6 +123,7 @@ def load_pretrained_model(device):
     elif args.object_types =="receptacles":
         categories = 32
         path = recep_path
+    print("path is ", path)
     mask_rcnn = get_model_instance_segmentation(categories+1)
     #pickle.dump(torch.load(path, map_location=device), open("loaded.p", "wb"))
     mask_rcnn.load_state_dict(torch.load(path, map_location=device))
