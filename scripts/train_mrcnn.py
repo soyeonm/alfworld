@@ -484,8 +484,8 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--lr", type=float, default=0.005)
 
-    parser.add_argument("--kitchen_sample_factor", type=int, default=1)
-    parser.add_argument("--living_sample_factor", type=int, default=1)
+    parser.add_argument("--kitchen_sample_factor", type=int, default=35)
+    parser.add_argument("--living_sample_factor", type=int, default=4)
     parser.add_argument("--balance_scenes", action='store_true')
     parser.add_argument("--kitchen_factor", type=float, default=1.0)
     parser.add_argument("--living_factor", type=float, default=1.0)
