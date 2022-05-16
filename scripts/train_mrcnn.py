@@ -172,9 +172,9 @@ class AlfredDataset(object):
 
         #if self.args.balance_scenes or not(train_dataset):
         min_size = int(len(kitchen)/4)
-        kitchen = [k for i,k in enumerate(kitchen) if i % self.args.kitchen_sample_factor == 0]
+        #kitchen = [k for i,k in enumerate(kitchen) if i % self.args.kitchen_sample_factor == 0]
 
-        living = [k for i,k in enumerate(living) if i %self.args.living_sample_factor == 0]
+        #living = [k for i,k in enumerate(living) if i %self.args.living_sample_factor == 0]
 
         if not(train_dataset):
             #just keep 1000
