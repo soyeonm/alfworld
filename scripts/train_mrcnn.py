@@ -179,10 +179,10 @@ class AlfredDataset(object):
         if not(train_dataset):
             #just keep 1000
             print("Total is ", len(kitchen+living + bedroom + bathroom))
-            ka = int(len(kitchen) / 50)
-            la = int(len(living) / 50)
-            bea = int(len(bedroom)/ 5)
-            baa = int(len(bathroom)/5)
+            ka = int(len(kitchen) / 100)
+            la = int(len(living) / 100)
+            bea = int(len(bedroom)/ 10)
+            baa = int(len(bathroom)/10)
             kitchen = [k for i,k in enumerate(kitchen) if i % ka == 0]
             living = [k for i,k in enumerate(living) if i % la == 0]
             bedroom = [k for i,k in enumerate(bedroom) if i % bea == 0]
