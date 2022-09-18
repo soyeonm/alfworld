@@ -45,7 +45,7 @@ MIN_PIXELS = 30
 OBJECTS_DETECTOR = ['Bowl', 'Mug', 'Plate', 'Cup', 'Box', 'Pan', 'Pot', 'window', 'door', 'Painting', 'Television', 'HousePlant', 'Pen', 'TissueBox', 'RemoteControl', 'Pencil', 'Book', 'CellPhone', 'DeskLamp', 'Dumbbell', 'FloorLamp', 'AlarmClock', 'BaseballBat', 'Pillow', 'CD', 'TableTopDecor', 'CreditCard', 'Vase', 'Laptop', 'Newspaper', 'Plunger', 'Faucet', 'ToiletPaper', 'DishSponge', 'GarbageBag', 'Statue', 'SprayBottle', 'Apple', 'Ladle', 'Bottle', 'Spatula', 'SoapBottle', 'SaltShaker', 'wall', 'room', 'Watch', 'KeyChain', 'Tomato', 'Lettuce', 'Potato', 'Bread', 'ButterKnife', 'Candle', 'PepperShaker', 'Spoon', 'Kettle', 'SoapBar', 'BasketBall', 'Knife', 'Fork', 'PaperTowelRoll', 'Boots', 'Cloth', 'TennisRacket', 'Egg', 'WineBottle', 'TeddyBear', 'VacuumCleaner', 'RoomDecor', 'Desktop']
 STATIC_RECEPTACLES = ['Desk', 'ArmChair', 'Chair', 'Safe', 'Dresser', 'Bed', 'GarbageCan', 'DiningTable', 'SideTable',  'Cart', 'LaundryHamper', 'Sink', 'Toilet', 'ShelvingUnit', 'Fridge',  'Toaster', 'CoffeeMachine', 'CounterTop', 'Floor', 'DogBed', 'TVStand',  'Sofa', 'Stool',  'WashingMachine', 'CoffeeTable', 'ClothesDryer', 'Microwave', 'Ottoman']
 #STATIC_RECEPTACLES = constants.STATIC_RECEPTACLES
-ALL_DETECTOR = set(OBJECTS_DETECTOR + STATIC_RECEPTACLES)
+ALL_DETECTOR = set(OBJECTS_DETECTOR + STATIC_RECEPTACLES + ['Ceiling_room'])
 #recep_path = os.environ['RECEP_PATH']
 #obj_path = os.environ['OBJ_PATH']
 
