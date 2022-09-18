@@ -149,7 +149,7 @@ class AlfredDataset(object):
 
         # load all image files, sorting them to
         # ensure that they are aligned
-        self.get_data_files(root, balance_scenes=args.balance_scenes, train_dataset=train_dataset)
+        self.get_data_files(root, train_dataset=train_dataset)
 
 
     def png_only(self, file_list):
@@ -194,7 +194,7 @@ class AlfredDataset(object):
     #     self.masks = [f.replace("/images/", "/masks/") for f in self.imgs]
     #     self.metas = [f.replace("/images/", "/meta/").replace(".png", ".json") for f in self.imgs]
 
-    def get_data_files(self, root, balance_scenes=False, train_dataset=False):
+    def get_data_files(self, root, train_dataset=False):
         
         self.imgs = glob(os.path.join(root, '*', 'rgb', '*.png'))
         self.masks = glob(os.path.join(root, '*', 'masks', '*.p'))
@@ -210,6 +210,8 @@ class AlfredDataset(object):
 
         for object_id, tf_mask in mask_pickle.items():
             object_class = object_id.split("|", 1)[0] if "|" in object_id else ""
+            if "Basin" in object_id:
+                object_class += "Basin"
             #TODO: DELTE THIS
             if not(object_class in self.object_classes):
                 pass
