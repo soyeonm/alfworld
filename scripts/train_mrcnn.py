@@ -41,54 +41,58 @@ import sys
 
 MIN_PIXELS = 30
 
-OBJECTS_DETECTOR = constants.OBJECTS_DETECTOR
-STATIC_RECEPTACLES = constants.STATIC_RECEPTACLES
-ALL_DETECTOR = constants.ALL_DETECTOR
+#OBJECTS_DETECTOR = constants.OBJECTS_DETECTOR
+OBJECTS_DETECTOR = ['Bowl', 'Mug', 'Plate', 'Cup', 'Box', 'Pan', 'Pot', 'window', 'door', 'Painting', 'Television', 'HousePlant', 'Pen', 'TissueBox', 'RemoteControl', 'Pencil', 'Book', 'CellPhone', 'DeskLamp', 'Dumbbell', 'FloorLamp', 'AlarmClock', 'BaseballBat', 'Pillow', 'CD', 'TableTopDecor', 'CreditCard', 'Vase', 'Laptop', 'Newspaper', 'Plunger', 'Faucet', 'ToiletPaper', 'DishSponge', 'GarbageBag', 'Statue', 'SprayBottle', 'Apple', 'Ladle', 'Bottle', 'Spatula', 'SoapBottle', 'SaltShaker', 'wall', 'room', 'Watch', 'KeyChain', 'Tomato', 'Lettuce', 'Potato', 'Bread', 'ButterKnife', 'Candle', 'PepperShaker', 'Spoon', 'Kettle', 'SoapBar', 'BasketBall', 'Knife', 'Fork', 'PaperTowelRoll', 'Boots', 'Cloth', 'TennisRacket', 'Egg', 'WineBottle', 'TeddyBear', 'VacuumCleaner', 'RoomDecor', 'Desktop']
+STATIC_RECEPTACLES = ['Desk', 'ArmChair', 'Chair', 'Safe', 'Dresser', 'Bed', 'GarbageCan', 'DiningTable', 'SideTable',  'Cart', 'LaundryHamper', 'Sink', 'Toilet', 'ShelvingUnit', 'Fridge',  'Toaster', 'CoffeeMachine', 'CounterTop', 'Floor', 'DogBed', 'TVStand',  'Sofa', 'Stool',  'WashingMachine', 'CoffeeTable', 'ClothesDryer', 'Microwave', 'Ottoman']
+#STATIC_RECEPTACLES = constants.STATIC_RECEPTACLES
+ALL_DETECTOR = set(OBJECTS_DETECTOR + STATIC_RECEPTACLES)
 #recep_path = os.environ['RECEP_PATH']
 #obj_path = os.environ['OBJ_PATH']
 
-object_detector_objs = ['AlarmClock', 'Apple', 'AppleSliced', 'BaseballBat', 'BasketBall', 'Book', 'Bowl', 'Box', 'Bread', 'BreadSliced', 'ButterKnife', 'CD', 'Candle', 'CellPhone', 'Cloth', 'CreditCard', 'Cup', 'DeskLamp', 'DishSponge', 'Egg', 'Faucet', 'FloorLamp', 'Fork', 'Glassbottle', 'HandTowel', 'HousePlant', 'Kettle', 'KeyChain', 'Knife', 'Ladle', 'Laptop', 'LaundryHamperLid', 'Lettuce', 'LettuceSliced', 'LightSwitch', 'Mug', 'Newspaper', 'Pan', 'PaperTowel', 'PaperTowelRoll', 'Pen', 'Pencil', 'PepperShaker', 'Pillow', 'Plate', 'Plunger', 'Pot', 'Potato', 'PotatoSliced', 'RemoteControl', 'SaltShaker', 'ScrubBrush', 'ShowerDoor', 'SoapBar', 'SoapBottle', 'Spatula', 'Spoon', 'SprayBottle', 'Statue', 'StoveKnob', 'TeddyBear', 'Television', 'TennisRacket', 'TissueBox', 'ToiletPaper', 'ToiletPaperRoll', 'Tomato', 'TomatoSliced', 'Towel', 'Vase', 'Watch', 'WateringCan', 'WineBottle']
+#object_detector_objs = ['AlarmClock', 'Apple', 'AppleSliced', 'BaseballBat', 'BasketBall', 'Book', 'Bowl', 'Box', 'Bread', 'BreadSliced', 'ButterKnife', 'CD', 'Candle', 'CellPhone', 'Cloth', 'CreditCard', 'Cup', 'DeskLamp', 'DishSponge', 'Egg', 'Faucet', 'FloorLamp', 'Fork', 'Glassbottle', 'HandTowel', 'HousePlant', 'Kettle', 'KeyChain', 'Knife', 'Ladle', 'Laptop', 'LaundryHamperLid', 'Lettuce', 'LettuceSliced', 'LightSwitch', 'Mug', 'Newspaper', 'Pan', 'PaperTowel', 'PaperTowelRoll', 'Pen', 'Pencil', 'PepperShaker', 'Pillow', 'Plate', 'Plunger', 'Pot', 'Potato', 'PotatoSliced', 'RemoteControl', 'SaltShaker', 'ScrubBrush', 'ShowerDoor', 'SoapBar', 'SoapBottle', 'Spatula', 'Spoon', 'SprayBottle', 'Statue', 'StoveKnob', 'TeddyBear', 'Television', 'TennisRacket', 'TissueBox', 'ToiletPaper', 'ToiletPaperRoll', 'Tomato', 'TomatoSliced', 'Towel', 'Vase', 'Watch', 'WateringCan', 'WineBottle']
 
-alfworld_receptacles = [
-        'BathtubBasin',
-        'Bowl',
-        'Cup',
-        'Drawer',
-        'Mug',
-        'Plate',
-        'Shelf',
-        'SinkBasin',
-        'Box',
-        'Cabinet',
-        'CoffeeMachine',
-        'CounterTop',
-        'Fridge',
-        'GarbageCan',
-        'HandTowelHolder',
-        'Microwave',
-        'PaintingHanger',
-        'Pan',
-        'Pot',
-        'StoveBurner',
-        'DiningTable',
-        'CoffeeTable',
-        'SideTable',
-        'ToiletPaperHanger',
-        'TowelHolder',
-        'Safe',
-        'BathtubBasin',
-        'ArmChair',
-        'Toilet',
-        'Sofa',
-        'Ottoman',
-        'Dresser',
-        'LaundryHamper',
-        'Desk',
-        'Bed',
-        'Cart',
-        'TVStand',
-        'Toaster',
-]
+# alfworld_receptacles = [
+#         'BathtubBasin',
+#         'Bowl',
+#         'Cup',
+#         'Drawer',
+#         'Mug',
+#         'Plate',
+#         'Shelf',
+#         'SinkBasin',
+#         'Box',
+#         'Cabinet',
+#         'CoffeeMachine',
+#         'CounterTop',
+#         'Fridge',
+#         'GarbageCan',
+#         'HandTowelHolder',
+#         'Microwave',
+#         'PaintingHanger',
+#         'Pan',
+#         'Pot',
+#         'StoveBurner',
+#         'DiningTable',
+#         'CoffeeTable',
+#         'SideTable',
+#         'ToiletPaperHanger',
+#         'TowelHolder',
+#         'Safe',
+#         'BathtubBasin',
+#         'ArmChair',
+#         'Toilet',
+#         'Sofa',
+#         'Ottoman',
+#         'Dresser',
+#         'LaundryHamper',
+#         'Desk',
+#         'Bed',
+#         'Cart',
+#         'TVStand',
+#         'Toaster',
+# ]
+
+
 
 def get_model_instance_segmentation(num_classes):
     # load an instance segmentation model pre-trained pre-trained on COCO
@@ -222,7 +226,8 @@ class AlfredDataset(object):
                 object_class += "Basin"
             #TODO: DELTE THIS
             if not(object_class in self.object_classes):
-                print("Object class ", object_class, " Not in self.object_classes")
+                if not(object_class in ALL_DETECTOR):
+                    print("Object class ", object_class, " Not in ALL_DETECTOR ")
             else:
                 class_idx = self.object_classes[object_class]
                 #smask = torch.tensor(tf_mask).byte()
