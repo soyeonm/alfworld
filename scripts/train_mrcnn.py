@@ -204,11 +204,16 @@ class AlfredDataset(object):
         #self.imgs = glob(os.path.join(root, '*', 'rgb', '*.png'))
         #self.masks = glob(os.path.join(root, '*', 'masks', '*.p'))
         #Just select 10 each
-        self.imgs = []
+        imgs = []
         for g in glob(os.path.join(root, '*', 'rgb')):
             #Just add the first 10 
-            self.imgs += glob(g + '/*')[:select_num]
-        self.masks = [i.replace('rgb', 'masks').replace('.png', '.p') for i in self.imgs] 
+            imgs += glob(g + '/*')[:select_num]
+        masks = [i.replace('rgb', 'masks').replace('.png', '.p') for i in imgs] 
+
+        self.imgs = []; self.masks = []
+        for img, mask in zip(imgs, masks):
+            if os.path.exists(mask):
+                self.imgs.append(img); self.masks.append(mask) 
 
         #self.metas = [os.path.join(root, "meta", f) for f in list(sorted(os.listdir(os.path.join(root, "meta"))))]
 
