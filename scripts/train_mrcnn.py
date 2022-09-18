@@ -222,7 +222,7 @@ class AlfredDataset(object):
                 object_class += "Basin"
             #TODO: DELTE THIS
             if not(object_class in self.object_classes):
-                pass
+                print("Object class ", object_class, " Not in self.object_classes")
             else:
                 class_idx = self.object_classes[object_class]
                 #smask = torch.tensor(tf_mask).byte()
@@ -475,7 +475,7 @@ def main(args):
         if not(args.no_logs):
             log_file, old_out = start_write_log_sys(log_name)
             print("log done!")
-        train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=100)
+        train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=500)
         # update the learning rate
         lr_scheduler.step()
         # # evaluate on the test dataset
