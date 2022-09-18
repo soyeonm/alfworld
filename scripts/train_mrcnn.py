@@ -123,10 +123,10 @@ def get_model_instance_segmentation(num_classes):
 
 def load_pretrained_model(device):
     if args.object_types == "objects":
-        categories = len(object_detector_objs)
+        categories = len(OBJECTS_DETECTOR)
         #path = obj_path
     elif args.object_types =="receptacles":
-        categories = 32
+        categories = len(STATIC_RECEPTACLES)
         #path = recep_path
     #print("path is ", path)
     mask_rcnn = get_model_instance_segmentation(categories+1)
