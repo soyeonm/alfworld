@@ -194,10 +194,18 @@ class AlfredDataset(object):
     #     self.masks = [f.replace("/images/", "/masks/") for f in self.imgs]
     #     self.metas = [f.replace("/images/", "/meta/").replace(".png", ".json") for f in self.imgs]
 
-    def get_data_files(self, root, train_dataset=False):
+    def get_data_files(self, root, train_dataset=False, select_num=10):
         
-        self.imgs = glob(os.path.join(root, '*', 'rgb', '*.png'))
-        self.masks = glob(os.path.join(root, '*', 'masks', '*.p'))
+
+        #self.imgs = glob(os.path.join(root, '*', 'rgb', '*.png'))
+        #self.masks = glob(os.path.join(root, '*', 'masks', '*.p'))
+        #Just select 10 each
+        self.imgs = []
+        for g in glob(os.path.join(root, '*', 'rgb')):
+            #Just add the first 10 
+            self.imgs += glob(g + '/*')[:10]
+        self.masks = [i.replace('rgb', 'masks').replace('.png', '.p') for i in self.imgs]
+
         #self.metas = [os.path.join(root, "meta", f) for f in list(sorted(os.listdir(os.path.join(root, "meta"))))]
 
     def __getitem__(self, idx):
