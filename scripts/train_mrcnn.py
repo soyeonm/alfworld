@@ -44,8 +44,8 @@ MIN_PIXELS = 30
 OBJECTS_DETECTOR = constants.OBJECTS_DETECTOR
 STATIC_RECEPTACLES = constants.STATIC_RECEPTACLES
 ALL_DETECTOR = constants.ALL_DETECTOR
-recep_path = os.environ['RECEP_PATH']
-obj_path = os.environ['OBJ_PATH']
+#recep_path = os.environ['RECEP_PATH']
+#obj_path = os.environ['OBJ_PATH']
 
 object_detector_objs = ['AlarmClock', 'Apple', 'AppleSliced', 'BaseballBat', 'BasketBall', 'Book', 'Bowl', 'Box', 'Bread', 'BreadSliced', 'ButterKnife', 'CD', 'Candle', 'CellPhone', 'Cloth', 'CreditCard', 'Cup', 'DeskLamp', 'DishSponge', 'Egg', 'Faucet', 'FloorLamp', 'Fork', 'Glassbottle', 'HandTowel', 'HousePlant', 'Kettle', 'KeyChain', 'Knife', 'Ladle', 'Laptop', 'LaundryHamperLid', 'Lettuce', 'LettuceSliced', 'LightSwitch', 'Mug', 'Newspaper', 'Pan', 'PaperTowel', 'PaperTowelRoll', 'Pen', 'Pencil', 'PepperShaker', 'Pillow', 'Plate', 'Plunger', 'Pot', 'Potato', 'PotatoSliced', 'RemoteControl', 'SaltShaker', 'ScrubBrush', 'ShowerDoor', 'SoapBar', 'SoapBottle', 'Spatula', 'Spoon', 'SprayBottle', 'Statue', 'StoveKnob', 'TeddyBear', 'Television', 'TennisRacket', 'TissueBox', 'ToiletPaper', 'ToiletPaperRoll', 'Tomato', 'TomatoSliced', 'Towel', 'Vase', 'Watch', 'WateringCan', 'WineBottle']
 
@@ -120,14 +120,14 @@ def get_model_instance_segmentation(num_classes):
 def load_pretrained_model(device):
     if args.object_types == "objects":
         categories = len(object_detector_objs)
-        path = obj_path
+        #path = obj_path
     elif args.object_types =="receptacles":
         categories = 32
-        path = recep_path
+        #path = recep_path
     print("path is ", path)
     mask_rcnn = get_model_instance_segmentation(categories+1)
     #pickle.dump(torch.load(path, map_location=device), open("loaded.p", "wb"))
-    mask_rcnn.load_state_dict(torch.load(path, map_location=device))
+    #mask_rcnn.load_state_dict(torch.load(path, map_location=device))
     print("LOADED MODELS!")
     return mask_rcnn
 
