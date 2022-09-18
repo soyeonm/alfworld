@@ -465,7 +465,7 @@ def main(args):
         if not(args.no_logs):
             log_file, old_out = start_write_log_sys(log_name)
             print("log done!")
-        train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=10)
+        train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=100)
         # update the learning rate
         lr_scheduler.step()
         # # evaluate on the test dataset
