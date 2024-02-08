@@ -211,6 +211,7 @@ class AlfredDataset(object):
         masks = [i.replace('rgb', 'masks').replace('.png', '.p') for i in imgs] 
 
         self.imgs = []; self.masks = []
+        breakpoint()
         for img, mask in zip(imgs, masks):
             if os.path.exists(mask):
                 self.imgs.append(img); self.masks.append(mask) 
