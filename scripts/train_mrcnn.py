@@ -439,6 +439,7 @@ def main(args):
     dataset = torch.utils.data.Subset(dataset, indices)
     dataset_test = torch.utils.data.Subset(dataset_test, indices_test)
 
+    breakpoint()
     # define training and validation data loaders
     data_loader = torch.utils.data.DataLoader(
         dataset, batch_size=args.batch_size, shuffle=True, num_workers=4,
