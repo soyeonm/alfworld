@@ -315,7 +315,7 @@ class AlfredDataset(object):
                         print(xmax-xmin, ymax-ymin, num_pixels)
                         cv2.imshow("img", np.array(disp_img))
                         cv2.imshow("sg", sg)
-                        cv2.waitKey(0)
+                        cv2.waitKey(0) 
 
         if len(boxes) == 0:
             return None, None
