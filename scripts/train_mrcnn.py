@@ -319,7 +319,7 @@ class AlfredDataset(object):
 
         if len(boxes) == 0:
             return None, None
-
+        breakpoint()
         iscrowd = torch.zeros(len(masks), dtype=torch.int64)
         boxes = torch.as_tensor(boxes, dtype=torch.float32)
         labels = torch.as_tensor(labels, dtype=torch.int64)
