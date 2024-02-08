@@ -319,6 +319,102 @@ class AlfredDataset(object):
 
         if len(boxes) == 0:
             return None, None
+        #breakpoint()
+        iscrowd = torch.zeros(len(masks), dtype=torch.int64)
+        boxes = torch.as_tensor(boxes, dtype=torch.float32)
+        labels = torch.as_tensor(labels, dtype=torch.int64)
+        masks = torch.as_tensor(masks, dtype=torch.uint8)
+
+        image_id = torch.tensor([idx])
+        area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
+
+        target = {}
+        target["boxes"] = boxes
+        target["labels"] = labels
+        target["masks"] = masks
+        target["image_id"] = image_id
+        target["area"] = area
+        target["iscrowd"] = iscrowd
+
+        if self.transforms is not None:
+            img, target = self.transforms(img, target)
+
+        return img, target
+
+    def fake_getitem(self, idx):
+        # load images ad masks
+        img_path = self.imgs[idx]
+        mask_path = self.masks[idx]
+        meta_path = self.metas[idx]
+
+        #print("Opening: %s" % (self.imgs[idx]))
+
+        with open(meta_path, 'r') as f:
+            color_to_object = json.load(f)
+
+        #print("img_path is", img_path)
+        
+        img = Image.open(img_path).convert("RGB")
+        if self.args.sanity_check:
+            cv2.imwrite("real_training_img.png", img)
+        if args.resize:
+            img.resize((300,300))
+            
+        # note that we haven't converted the mask to RGB,
+        # because each color corresponds to a different instance
+        # with 0 being background
+        mask = Image.open(mask_path)
+        if args.resize:
+            mask.resize((300,300))
+
+        mask = np.array(mask)
+        #print("mask_path is", mask_path)
+        im_width, im_height = mask.shape[0], mask.shape[1]
+        seg_colors = np.unique(mask.reshape(im_height*im_height, 3), axis=0)
+
+        masks, boxes, labels = [], [], []
+        for color in seg_colors:
+            color_str = str(tuple(color[::-1]))
+            if color_str in color_to_object:
+                object_id = color_to_object[color_str]
+                object_class = object_id.split("|", 1)[0] if "|" in object_id else ""
+                if "Basin" in object_id:
+                    object_class += "Basin"
+                if object_class in self.object_classes:
+                    smask = np.all(mask == color, axis=2)
+                    pos = np.where(smask)
+                    num_pixels = len(pos[0])
+
+                    xmin = np.min(pos[1])
+                    xmax = np.max(pos[1])
+                    ymin = np.min(pos[0])
+                    ymax = np.max(pos[0])
+
+                    # skip if not sufficient pixels
+                    # if num_pixels < MIN_PIXELS:
+                    if (xmax-xmin)*(ymax-ymin) < MIN_PIXELS:
+                        continue
+
+                    class_idx = self.object_classes.index(object_class)
+
+                    masks.append(smask)
+                    #pickle.dump(masks, open("masks_" + str(idx) + ".p", "wb"))
+                    boxes.append([xmin, ymin, xmax, ymax])
+                    labels.append(class_idx)
+
+                    if self.args.debug:
+                        disp_img = np.array(img)
+                        cv2.rectangle(disp_img, (xmin, ymin), (xmax, ymax), color=(0, 255, 0), thickness=2)
+                        cv2.putText(disp_img, object_class, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=2)
+                        sg = np.uint8(smask[:, :, np.newaxis])*255
+
+                        print(xmax-xmin, ymax-ymin, num_pixels)
+                        cv2.imshow("img", np.array(disp_img))
+                        cv2.imshow("sg", sg)
+                        cv2.waitKey(0) 
+
+        if len(boxes) == 0:
+            return None, None
         breakpoint()
         iscrowd = torch.zeros(len(masks), dtype=torch.int64)
         boxes = torch.as_tensor(boxes, dtype=torch.float32)
@@ -340,6 +436,7 @@ class AlfredDataset(object):
             img, target = self.transforms(img, target)
 
         return img, target
+
 
     def __len__(self):
         return len(self.imgs)
