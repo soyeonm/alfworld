@@ -171,7 +171,7 @@ class AlfredDataset(object):
         if len(boxes) == 0:
             return None, None
         else:
-            masks = np.stack(masks, axis=0)
+            masks = np.stack(masks, axis=0)*1.0
         #breakpoint()
         iscrowd = torch.zeros(len(masks), dtype=torch.int64)
         boxes = torch.as_tensor(boxes, dtype=torch.float32)
