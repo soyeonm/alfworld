@@ -163,9 +163,11 @@ class AlfredDataset(object):
                     cv2.putText(disp_img, object_class, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=2)
                     sg = np.uint8(smask[:, :, np.newaxis])*255
 
+                    if not(os.path.exists('debug')):
+                        os.makedirs('debug')
                     print(xmax-xmin, ymax-ymin, num_pixels)
-                    cv2.imshow("img", np.array(disp_img))
-                    cv2.imshow("sg", sg)
+                    cv2.imwrite("debug/img_i.png", np.array(disp_img))
+                    cv2.imwrite("debug/sg_i.png", sg)
                     cv2.waitKey(0) 
 
         if len(boxes) == 0:
@@ -293,7 +295,7 @@ def main(args):
         lr_scheduler.step()
         # # evaluate on the test dataset
         
-        if epoch %20 ==0 and args.evaluate:
+        if epoch %5 ==0 and args.evaluate:
             model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
             torch.save(model.state_dict(), model_path)
             c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
