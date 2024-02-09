@@ -260,7 +260,7 @@ def main(args):
     # get the model using our helper function
 
     #if len(args.load_model) > 0:
-    model = get_model_instance_segmentation(categories+1, backbone = args.backbone).to(device)
+    model = get_model_instance_segmentation(len(small_objects)+1, backbone = args.backbone).to(device)
 
     # construct an optimizer
     params = [p for p in model.parameters() if p.requires_grad]
