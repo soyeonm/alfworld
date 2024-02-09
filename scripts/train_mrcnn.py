@@ -39,7 +39,7 @@ import os
 import sys
 
 
-MIN_PIXELS = 100
+MIN_PIXELS = 100 
 
 small_objects =  ['basket', 'book', 'bowl', 'cup', 'hat', 'plate', 'shoe', 'stuffed_toy']
 small_objects_cat_to_idx = {v:k for k,v in enumerate(small_objects)}
@@ -71,7 +71,7 @@ class AlfredDataset(object):
 
     def get_data_files(self, root, balance_scenes=False, train_dataset=False):
         breakpoint()
-        
+
          
 
     # def get_data_files(self, root, balance_scenes=False, train_dataset=False):
@@ -240,7 +240,7 @@ def main(args):
     device = torch.device('cuda:' + str(args.gpu_num)) if torch.cuda.is_available() else torch.device('cpu')
 
     # our dataset has two classes only - background and person
-    num_classes = len(get_object_classes(args.object_types))+1
+    num_classes = len(small_objects)+1
     # use our dataset and defined transformations
     dataset = AlfredDataset(args.data_path, get_transform(train=True), args, True)
     dataset_test = AlfredDataset(args.test_data_path, get_transform(train=False), args, False)
