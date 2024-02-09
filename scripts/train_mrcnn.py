@@ -148,10 +148,10 @@ class AlfredDataset(object):
                 class_idx = i #self.object_classes[object_class]
                 smask = mask[i] ==1
                 pos = np.where(smask)
-                xmin = np.min(pos[1])
-                xmax = np.max(pos[1])
-                ymin = np.min(pos[0])
-                ymax = np.max(pos[0])
+                xmin = np.min(pos[0])
+                xmax = np.max(pos[0])
+                ymin = np.min(pos[1])
+                ymax = np.max(pos[1])
                 masks.append(smask)
                 #pickle.dump(masks, open("masks_" + str(idx) + ".p", "wb"))
                 object_class = small_objects[i]
