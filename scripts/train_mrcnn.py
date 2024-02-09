@@ -110,7 +110,7 @@ class AlfredDataset(object):
         # load images ad masks
         img_path = self.imgs[idx]
         mask_path = self.masks[idx]
-        meta_path = self.metas[idx]
+        #meta_path = self.metas[idx]
 
         #print("Opening: %s" % (self.imgs[idx]))
 
