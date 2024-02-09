@@ -252,7 +252,7 @@ def main(args):
     indices_test = list(range(len(dataset_test)))
     if not(args.without_40):
         print("using 40 for validation")
-        dataset = torch.utils.data.Subset(dataset, indices[:-40])
+        dataset = torch.utils.data.Subset(dataset, indices)#[:-40])
         #pickle.dump(dataset, open("dataset_train.p", "wb"))
         dataset_test = torch.utils.data.Subset(dataset_test, indices_test[-40:])
     else:
