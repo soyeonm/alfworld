@@ -65,7 +65,7 @@ def load_maskrcnn_resnet101_or_152_fpn(pretrained, backbone_num, **kwargs):
     return model
 
 
-def get_model_instance_segmentation(num_classes, backbone):
+def get_model_instance_segmentation1(num_classes, backbone):
     # load an instance segmentation model pre-trained pre-trained on COCO
     if backbone == 50:
         model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
