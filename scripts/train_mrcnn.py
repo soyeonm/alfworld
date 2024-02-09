@@ -70,7 +70,11 @@ class AlfredDataset(object):
         return [f for f in file_list if f[-4:] == '.png']
 
     def get_data_files(self, root, balance_scenes=False, train_dataset=False):
-        breakpoint()
+        #rgb_dirs = glob(root + "/*/rgb_*/*")
+        #mask_dirs = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in rgb_dirs]
+        self.imgs = glob(root + "/*/rgb_*/*")
+        self.masks = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in rgb_dirs]
+
 
          
 
@@ -122,55 +126,41 @@ class AlfredDataset(object):
         # note that we haven't converted the mask to RGB,
         # because each color corresponds to a different instance
         # with 0 being background
-        mask = Image.open(mask_path)
+        mask = pickle.load(open(mask_path, 'rb'))
+        mask =np.transpose(mask, (2, 0, 1))
         if args.resize:
             mask.resize((300,300))
 
-        mask = np.array(mask)
+        #mask = np.array(mask)
         #print("mask_path is", mask_path)
-        im_width, im_height = mask.shape[0], mask.shape[1]
-        seg_colors = np.unique(mask.reshape(im_height*im_height, 3), axis=0)
+        im_width, im_height = mask.shape[1], mask.shape[2]
+        #seg_colors = np.unique(mask.reshape(im_height*im_height, 3), axis=0)
 
         masks, boxes, labels = [], [], []
-        for color in seg_colors:
-            color_str = str(tuple(color[::-1]))
-            if color_str in color_to_object:
-                object_id = color_to_object[color_str]
-                object_class = object_id.split("|", 1)[0] if "|" in object_id else ""
-                if "Basin" in object_id:
-                    object_class += "Basin"
-                if object_class in self.object_classes:
-                    smask = np.all(mask == color, axis=2)
-                    pos = np.where(smask)
-                    num_pixels = len(pos[0])
+        for i in range(mask.shape[0]):
+            if np.sum(mask[i]) >=100:
+                class_idx = i #self.object_classes[object_class]
+                smask = mask[i] ==1
+                pos = np.where(smask)
+                xmin = np.min(pos[1])
+                xmax = np.max(pos[1])
+                ymin = np.min(pos[0])
+                ymax = np.max(pos[0])
+                masks.append(smask)
+                #pickle.dump(masks, open("masks_" + str(idx) + ".p", "wb"))
+                boxes.append([xmin, ymin, xmax, ymax])
+                labels.append(class_idx)
 
-                    xmin = np.min(pos[1])
-                    xmax = np.max(pos[1])
-                    ymin = np.min(pos[0])
-                    ymax = np.max(pos[0])
+                if self.args.debug:
+                    disp_img = np.array(img)
+                    cv2.rectangle(disp_img, (xmin, ymin), (xmax, ymax), color=(0, 255, 0), thickness=2)
+                    cv2.putText(disp_img, object_class, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=2)
+                    sg = np.uint8(smask[:, :, np.newaxis])*255
 
-                    # skip if not sufficient pixels
-                    # if num_pixels < MIN_PIXELS:
-                    if (xmax-xmin)*(ymax-ymin) < MIN_PIXELS:
-                        continue
-
-                    class_idx = self.object_classes[object_class]
-
-                    masks.append(smask)
-                    #pickle.dump(masks, open("masks_" + str(idx) + ".p", "wb"))
-                    boxes.append([xmin, ymin, xmax, ymax])
-                    labels.append(class_idx)
-
-                    if self.args.debug:
-                        disp_img = np.array(img)
-                        cv2.rectangle(disp_img, (xmin, ymin), (xmax, ymax), color=(0, 255, 0), thickness=2)
-                        cv2.putText(disp_img, object_class, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=2)
-                        sg = np.uint8(smask[:, :, np.newaxis])*255
-
-                        print(xmax-xmin, ymax-ymin, num_pixels)
-                        cv2.imshow("img", np.array(disp_img))
-                        cv2.imshow("sg", sg)
-                        cv2.waitKey(0) 
+                    print(xmax-xmin, ymax-ymin, num_pixels)
+                    cv2.imshow("img", np.array(disp_img))
+                    cv2.imshow("sg", sg)
+                    cv2.waitKey(0) 
 
         if len(boxes) == 0:
             return None, None
