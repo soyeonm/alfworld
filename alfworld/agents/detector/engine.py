@@ -116,7 +116,7 @@ def evaluate(model, data_loader, device, epoch):
         torch.cuda.synchronize()
         model_time = time.time()
         outputs = model(image)
-        breakpoint()
+        #breakpoint()
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
         #print("outputs is ", outputs)

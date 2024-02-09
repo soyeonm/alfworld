@@ -70,7 +70,7 @@ class AlfredDataset(object):
         return [f for f in file_list if f[-4:] == '.png']
 
     def get_data_files(self, root, balance_scenes=False, train_dataset=False):
-        rgb_dirs = glob(root + "/*/rgb_*/*")
+        rgb_dirs = sorted(glob(root + "/*/rgb_*/*"))
         mask_dirs = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in rgb_dirs]
         #self.imgs = glob(root + "/*/rgb_*/*")
         #self.masks = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in self.imgs]
