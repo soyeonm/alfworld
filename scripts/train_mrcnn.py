@@ -161,9 +161,11 @@ class AlfredDataset(object):
                     cv2.imshow("img", np.array(disp_img))
                     cv2.imshow("sg", sg)
                     cv2.waitKey(0) 
-        masks = np.stack(masks, axis=0)
+
         if len(boxes) == 0:
             return None, None
+        else:
+            masks = np.stack(masks, axis=0)
         #breakpoint()
         iscrowd = torch.zeros(len(masks), dtype=torch.int64)
         boxes = torch.as_tensor(boxes, dtype=torch.float32)
