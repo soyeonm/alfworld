@@ -19,7 +19,7 @@ import cv2
 from alfworld.agents.detector.engine import train_one_epoch, evaluate
 import alfworld.agents.detector.utils as utils
 import torchvision
-#from alfworld.agents.detector.mrcnn import get_model_instance_segmentation#, load_pretrained_model
+from alfworld.agents.detector.mrcnn import get_model_instance_segmentation#, load_pretrained_model
 import alfworld.agents.detector.transforms as T
 
 import alfworld.gen.constants as constants
@@ -41,209 +41,66 @@ import sys
 
 MIN_PIXELS = 100
 
-OBJECTS_DETECTOR = constants.OBJECTS_DETECTOR
-STATIC_RECEPTACLES = constants.STATIC_RECEPTACLES
-ALL_DETECTOR = constants.ALL_DETECTOR
-recep_path = os.environ['RECEP_PATH']
-obj_path = os.environ['OBJ_PATH']
+small_objects =  ['basket', 'book', 'bowl', 'cup', 'hat', 'plate', 'shoe', 'stuffed_toy']
+small_objects_cat_to_idx = {v:k for k,v in enumerate(small_objects)}
+#{'basket': 0, 'book': 1, 'bowl': 2, 'cup': 3, 'hat': 4, 'plate': 5, 'shoe': 6, 'stuffed_toy': 7}
 
-object_detector_objs = ['AlarmClock', 'Apple', 'AppleSliced', 'BaseballBat', 'BasketBall', 'Book', 'Bowl', 'Box', 'Bread', 'BreadSliced', 'ButterKnife', 'CD', 'Candle', 'CellPhone', 'Cloth', 'CreditCard', 'Cup', 'DeskLamp', 'DishSponge', 'Egg', 'Faucet', 'FloorLamp', 'Fork', 'Glassbottle', 'HandTowel', 'HousePlant', 'Kettle', 'KeyChain', 'Knife', 'Ladle', 'Laptop', 'LaundryHamperLid', 'Lettuce', 'LettuceSliced', 'LightSwitch', 'Mug', 'Newspaper', 'Pan', 'PaperTowel', 'PaperTowelRoll', 'Pen', 'Pencil', 'PepperShaker', 'Pillow', 'Plate', 'Plunger', 'Pot', 'Potato', 'PotatoSliced', 'RemoteControl', 'SaltShaker', 'ScrubBrush', 'ShowerDoor', 'SoapBar', 'SoapBottle', 'Spatula', 'Spoon', 'SprayBottle', 'Statue', 'StoveKnob', 'TeddyBear', 'Television', 'TennisRacket', 'TissueBox', 'ToiletPaper', 'ToiletPaperRoll', 'Tomato', 'TomatoSliced', 'Towel', 'Vase', 'Watch', 'WateringCan', 'WineBottle']
-
-alfworld_receptacles = [
-        'BathtubBasin',
-        'Bowl',
-        'Cup',
-        'Drawer',
-        'Mug',
-        'Plate',
-        'Shelf',
-        'SinkBasin',
-        'Box',
-        'Cabinet',
-        'CoffeeMachine',
-        'CounterTop',
-        'Fridge',
-        'GarbageCan',
-        'HandTowelHolder',
-        'Microwave',
-        'PaintingHanger',
-        'Pan',
-        'Pot',
-        'StoveBurner',
-        'DiningTable',
-        'CoffeeTable',
-        'SideTable',
-        'ToiletPaperHanger',
-        'TowelHolder',
-        'Safe',
-        'BathtubBasin',
-        'ArmChair',
-        'Toilet',
-        'Sofa',
-        'Ottoman',
-        'Dresser',
-        'LaundryHamper',
-        'Desk',
-        'Bed',
-        'Cart',
-        'TVStand',
-        'Toaster',
-]
-
-def get_model_instance_segmentation(num_classes):
-    # load an instance segmentation model pre-trained pre-trained on COCO
-    model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
-
-    anchor_generator = AnchorGenerator(
-        sizes=tuple([(4, 8, 16, 32, 64, 128, 256, 512) for _ in range(5)]),
-        aspect_ratios=tuple([(0.25, 0.5, 1.0, 2.0) for _ in range(5)]))
-    model.rpn.anchor_generator = anchor_generator
-
-    # 256 because that's the number of features that FPN returns
-    model.rpn.head = RPNHead(256, anchor_generator.num_anchors_per_location()[0])
-
-    # get number of input features for the classifier
-    in_features = model.roi_heads.box_predictor.cls_score.in_features
-    # replace the pre-trained head with a new one
-    model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
-
-    # now get the number of input features for the mask classifier
-    in_features_mask = model.roi_heads.mask_predictor.conv5_mask.in_channels
-    hidden_layer = 256
-    # and replace the mask predictor with a new one
-    model.roi_heads.mask_predictor = MaskRCNNPredictor(in_features_mask,
-                                                       hidden_layer,
-                                                       num_classes)
-
-    return model
-
-def load_pretrained_model(device):
-    if args.object_types == "objects":
-        categories = len(object_detector_objs)
-        path = obj_path
-    elif args.object_types =="receptacles":
-        categories = 32
-        path = recep_path
-    print("path is ", path)
-    mask_rcnn = get_model_instance_segmentation(categories+1)
-    #pickle.dump(torch.load(path, map_location=device), open("loaded.p", "wb"))
-    #mask_rcnn.load_state_dict(torch.load(path, map_location=device))
-    print("LOADED MODELS!")
-    return mask_rcnn
-
-
-def get_object_classes(object_type):
-    if object_type == "objects":
-        return OBJECTS_DETECTOR
-    elif object_type == "receptacles":
-        return STATIC_RECEPTACLES
-    else:
-        return ALL_DETECTOR
+# def get_object_classes(object_type):
+#     #TODO
+#     if object_type == "objects":
+#         return OBJECTS_DETECTOR
+#     elif object_type == "receptacles":
+#         return STATIC_RECEPTACLES
+#     else:
+#         return ALL_DETECTOR
 
 class AlfredDataset(object):
     def __init__(self, root, transforms, args, train_dataset):
         self.root = root
         self.transforms = transforms
         self.args = args
-        self.object_classes = get_object_classes(args.object_types)
+        self.object_classes = small_objects_cat_to_idx
 
         # load all image files, sorting them to
         # ensure that they are aligned
-        self.get_data_files_teach(root, balance_scenes=args.balance_scenes, train_dataset=train_dataset)
+        self.get_data_files(root, train_dataset=train_dataset)
 
 
     def png_only(self, file_list):
         return [f for f in file_list if f[-4:] == '.png']
 
-
-    def get_data_files_teach(self, root, balance_scenes=False, train_dataset=False):
-        kitchen_path = os.path.join(root, 'kitchen')#, 'images')
-        living_path = os.path.join(root, 'living')# 'images')
-        bedroom_path = os.path.join(root, 'bedroom')#, 'images')
-        bathroom_path = os.path.join(root, 'bathroom')#, 'images')
-
-
-
-        kitchen = glob(kitchen_path + '/*/images/*.png')
-        living = glob(living_path + '/*/images/*.png')
-        bedroom = glob(bedroom_path + '/*/images/*.png')
-        bathroom = glob(bathroom_path + '/*/images/*.png')
-
-
-        #if self.args.balance_scenes or not(train_dataset):
-        min_size = int(len(kitchen)/4)
-        #kitchen = [k for i,k in enumerate(kitchen) if i % self.args.kitchen_sample_factor == 0]
-
-        #living = [k for i,k in enumerate(living) if i %self.args.living_sample_factor == 0]
-
-        if not(train_dataset):
-            #just keep 1000
-            print("Total is ", len(kitchen+living + bedroom + bathroom))
-            ka = int(len(kitchen) / 100)
-            la = int(len(living) / 100)
-            bea = int(len(bedroom)/ 10)
-            baa = int(len(bathroom)/10)
-            kitchen = [k for i,k in enumerate(kitchen) if i % ka == 0]
-            living = [k for i,k in enumerate(living) if i % la == 0]
-            bedroom = [k for i,k in enumerate(bedroom) if i % bea == 0]
-            bathroom = [k for i,k in enumerate(bathroom) if i % baa == 0]
-            print("Total after is ", len(kitchen+living + bedroom + bathroom))
-
-
-        self.imgs = kitchen + living + bedroom + bathroom
-        self.masks = [f.replace("/images/", "/masks/") for f in self.imgs]
-        self.metas = [f.replace("/images/", "/meta/").replace(".png", ".json") for f in self.imgs]
-
     def get_data_files(self, root, balance_scenes=False, train_dataset=False):
-        #if balance_scenes and train_dataset:
-        if balance_scenes:
-            kitchen_path = os.path.join(root, 'kitchen', 'images')
-            living_path = os.path.join(root, 'living', 'images')
-            bedroom_path = os.path.join(root, 'bedroom', 'images')
-            bathroom_path = os.path.join(root, 'bathroom', 'images')
+        breakpoint()
+        
+         
 
-            kitchen = self.png_only(list(sorted(os.listdir(kitchen_path))))
-            living = self.png_only(list(sorted(os.listdir(living_path))))
-            bedroom = self.png_only(list(sorted(os.listdir(bedroom_path))))
-            bathroom = self.png_only(list(sorted(os.listdir(bathroom_path))))
+    # def get_data_files(self, root, balance_scenes=False, train_dataset=False):
+    #     if balance_scenes:
+    #         kitchen_path = os.path.join(root, 'kitchen', 'images')
+    #         living_path = os.path.join(root, 'living', 'images')
+    #         bedroom_path = os.path.join(root, 'bedroom', 'images')
+    #         bathroom_path = os.path.join(root, 'bathroom', 'images')
+
+    #         kitchen = self.png_only(list(sorted(os.listdir(kitchen_path))))
+    #         living = self.png_only(list(sorted(os.listdir(living_path))))
+    #         bedroom = self.png_only(list(sorted(os.listdir(bedroom_path))))
+    #         bathroom = self.png_only(list(sorted(os.listdir(bathroom_path))))
 
 
-            min_size = min(len(kitchen), len(living), len(bedroom), len(bathroom))
-            kitchen = [os.path.join(kitchen_path, f) for f in random.sample(kitchen, int(min_size*self.args.kitchen_factor))]
-            living = [os.path.join(living_path, f) for f in random.sample(living, int(min_size*self.args.living_factor))]
-            bedroom = [os.path.join(bedroom_path, f) for f in random.sample(bedroom, int(min_size*self.args.bedroom_factor))]
-            bathroom = [os.path.join(bathroom_path, f) for f in random.sample(bathroom, int(min_size*self.args.bathroom_factor))]
+    #         min_size = min(len(kitchen), len(living), len(bedroom), len(bathroom))
+    #         kitchen = [os.path.join(kitchen_path, f) for f in random.sample(kitchen, int(min_size*self.args.kitchen_factor))]
+    #         living = [os.path.join(living_path, f) for f in random.sample(living, int(min_size*self.args.living_factor))]
+    #         bedroom = [os.path.join(bedroom_path, f) for f in random.sample(bedroom, int(min_size*self.args.bedroom_factor))]
+    #         bathroom = [os.path.join(bathroom_path, f) for f in random.sample(bathroom, int(min_size*self.args.bathroom_factor))]
 
-            self.imgs = kitchen + living + bedroom + bathroom
-            self.masks = [f.replace("/images/", "/masks/") for f in self.imgs]
-            self.metas = [f.replace("/images/", "/meta/").replace(".png", ".json") for f in self.imgs]
+    #         self.imgs = kitchen + living + bedroom + bathroom
+    #         self.masks = [f.replace("/images/", "/masks/") for f in self.imgs]
+    #         self.metas = [f.replace("/images/", "/meta/").replace(".png", ".json") for f in self.imgs]
 
-        # elif balance_scenes and not(train_dataset):
-        #     kitchen_path = os.path.join(root, 'kitchen', 'images')
-        #     #living_path = os.path.join(root, 'living', 'images')
-        #     bedroom_path = os.path.join(root, 'bedroom', 'images')
-        #     #bathroom_path = os.path.join(root, 'bathroom', 'images')
-
-        #     kitchen = self.png_only(list(sorted(os.listdir(kitchen_path))))
-        #     #living = list(sorted(os.listdir(living_path)))
-        #     bedroom = self.png_only(list(sorted(os.listdir(bedroom_path))))
-        #     #bathroom = list(sorted(os.listdir(bathroom_path)))
-
-        #     #min_size = min(len(kitchen), len(living), len(bedroom), len(bathroom))
-        #     min_size = min(len(kitchen), len(bedroom))
-        #     kitchen = [os.path.join(kitchen_path, f) for f in random.sample(kitchen, int(min_size*self.args.kitchen_factor))]
-        #     #living = [os.path.join(living_path, f) for f in random.sample(living, int(min_size*self.args.living_factor))]
-        #     bedroom = [os.path.join(bedroom_path, f) for f in random.sample(bedroom, int(min_size*self.args.bedroom_factor))]
-        #     #bathroom = [os.path.join(bathroom_path, f) for f in random.sample(bathroom, int(min_size*self.args.bathroom_factor))]
-
-        #     #self.imgs = kitchen + living + bedroom + bathroom
-        #     self.imgs = kitchen + bedroom
-        #     self.masks = [f.replace("images/", "masks/") for f in self.imgs]
-        #     self.metas = [f.replace("images/", "meta/").replace(".png", ".json") for f in self.imgs]
-        else:
-            self.imgs = [os.path.join(root, "images", f) for f in list(sorted(os.listdir(os.path.join(root, "images"))))]
-            self.masks = [os.path.join(root, "masks", f) for f in list(sorted(os.listdir(os.path.join(root, "masks"))))]
-            self.metas = [os.path.join(root, "meta", f) for f in list(sorted(os.listdir(os.path.join(root, "meta"))))]
+    #     else:
+    #         self.imgs = [os.path.join(root, "images", f) for f in list(sorted(os.listdir(os.path.join(root, "images"))))]
+    #         self.masks = [os.path.join(root, "masks", f) for f in list(sorted(os.listdir(os.path.join(root, "masks"))))]
+    #         self.metas = [os.path.join(root, "meta", f) for f in list(sorted(os.listdir(os.path.join(root, "meta"))))]
 
     def __getitem__(self, idx):
         # load images ad masks
@@ -259,8 +116,6 @@ class AlfredDataset(object):
         #print("img_path is", img_path)
         
         img = Image.open(img_path).convert("RGB")
-        if self.args.sanity_check:
-            cv2.imwrite("real_training_img.png", img)
         if args.resize:
             img.resize((300,300))
             
@@ -299,7 +154,7 @@ class AlfredDataset(object):
                     if (xmax-xmin)*(ymax-ymin) < MIN_PIXELS:
                         continue
 
-                    class_idx = self.object_classes.index(object_class)
+                    class_idx = self.object_classes[object_class]
 
                     masks.append(smask)
                     #pickle.dump(masks, open("masks_" + str(idx) + ".p", "wb"))
@@ -340,103 +195,6 @@ class AlfredDataset(object):
             img, target = self.transforms(img, target)
 
         return img, target
-
-    def fake_getitem(self, idx):
-        # load images ad masks
-        img_path = self.imgs[idx]
-        mask_path = self.masks[idx]
-        meta_path = self.metas[idx]
-
-        #print("Opening: %s" % (self.imgs[idx]))
-
-        with open(meta_path, 'r') as f:
-            color_to_object = json.load(f)
-
-        #print("img_path is", img_path)
-        
-        img = Image.open(img_path).convert("RGB")
-        if self.args.sanity_check:
-            cv2.imwrite("real_training_img.png", img)
-        if args.resize:
-            img.resize((300,300))
-            
-        # note that we haven't converted the mask to RGB,
-        # because each color corresponds to a different instance
-        # with 0 being background
-        mask = Image.open(mask_path)
-        if args.resize:
-            mask.resize((300,300))
-
-        mask = np.array(mask)
-        #print("mask_path is", mask_path)
-        im_width, im_height = mask.shape[0], mask.shape[1]
-        seg_colors = np.unique(mask.reshape(im_height*im_height, 3), axis=0)
-
-        masks, boxes, labels = [], [], []
-        for color in seg_colors:
-            color_str = str(tuple(color[::-1]))
-            if color_str in color_to_object:
-                object_id = color_to_object[color_str]
-                object_class = object_id.split("|", 1)[0] if "|" in object_id else ""
-                if "Basin" in object_id:
-                    object_class += "Basin"
-                if object_class in self.object_classes:
-                    smask = np.all(mask == color, axis=2)
-                    pos = np.where(smask)
-                    num_pixels = len(pos[0])
-
-                    xmin = np.min(pos[1])
-                    xmax = np.max(pos[1])
-                    ymin = np.min(pos[0])
-                    ymax = np.max(pos[0])
-
-                    # skip if not sufficient pixels
-                    # if num_pixels < MIN_PIXELS:
-                    if (xmax-xmin)*(ymax-ymin) < MIN_PIXELS:
-                        continue
-
-                    class_idx = self.object_classes.index(object_class)
-
-                    masks.append(smask)
-                    #pickle.dump(masks, open("masks_" + str(idx) + ".p", "wb"))
-                    boxes.append([xmin, ymin, xmax, ymax])
-                    labels.append(class_idx)
-
-                    if self.args.debug:
-                        disp_img = np.array(img)
-                        cv2.rectangle(disp_img, (xmin, ymin), (xmax, ymax), color=(0, 255, 0), thickness=2)
-                        cv2.putText(disp_img, object_class, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=2)
-                        sg = np.uint8(smask[:, :, np.newaxis])*255
-
-                        print(xmax-xmin, ymax-ymin, num_pixels)
-                        cv2.imshow("img", np.array(disp_img))
-                        cv2.imshow("sg", sg)
-                        cv2.waitKey(0) 
-
-        if len(boxes) == 0:
-            return None, None
-        breakpoint()
-        iscrowd = torch.zeros(len(masks), dtype=torch.int64)
-        boxes = torch.as_tensor(boxes, dtype=torch.float32)
-        labels = torch.as_tensor(labels, dtype=torch.int64)
-        masks = torch.as_tensor(masks, dtype=torch.uint8)
-
-        image_id = torch.tensor([idx])
-        area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
-
-        target = {}
-        target["boxes"] = boxes
-        target["labels"] = labels
-        target["masks"] = masks
-        target["image_id"] = image_id
-        target["area"] = area
-        target["iscrowd"] = iscrowd
-
-        if self.transforms is not None:
-            img, target = self.transforms(img, target)
-
-        return img, target
-
 
     def __len__(self):
         return len(self.imgs)
@@ -512,12 +270,7 @@ def main(args):
     # get the model using our helper function
 
     #if len(args.load_model) > 0:
-    model = load_pretrained_model(device)
-    #else:
-    #    model = get_model_instance_segmentation(num_classes, args.backbone)
-
-    # move model to the right device
-    model.to(device)
+    model = get_model_instance_segmentation(categories+1, backbone = args.backbone).to(device)
 
     # construct an optimizer
     params = [p for p in model.parameters() if p.requires_grad]
@@ -530,15 +283,6 @@ def main(args):
 
     # let's train it for 10 epochs
     num_epochs = args.num_epochs
-    #print("Starting sanity evaluation")
-    #if args.evaluate:
-    #    epoch = -1
-    #    if not(args.no_logs):
-    #        log_file, old_out = start_write_log_sys(log_name)
-    #    c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
-    #    del c
-    #    if not(args.no_logs):
-    #        end_write_log_sys(log_file, old_out)
 
     for epoch in range(num_epochs):
         print("Epoch ", epoch, "starting!")
@@ -546,7 +290,6 @@ def main(args):
         if not(args.no_logs):
             log_file, old_out = start_write_log_sys(log_name)
             print("log done!")
-        breakpoint()
         train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=10)
         # update the learning rate
         lr_scheduler.step()
@@ -566,7 +309,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--no_logs", action='store_true')
+    #parser.add_argument("--no_logs", action='store_true')
     parser.add_argument("--backbone", type=int, default=50)
     parser.add_argument("--data_path", type=str, default="data/")
     parser.add_argument("--test_data_path", type=str, required=True)
@@ -574,21 +317,10 @@ if __name__ == "__main__":
     parser.add_argument("--evaluate", action='store_true')
     parser.add_argument("--resize", action='store_true')
 
-    parser.add_argument("--without_40", action = "store_true")
     parser.add_argument("--save_path", type=str, default="data/")
-    parser.add_argument("--object_types", choices=["objects", "receptacles", "all"], default="all")
     parser.add_argument("--save_name", type=str, default="mrcnn_alfred_objects")
-    parser.add_argument("--load_model", type=str, default="")
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--lr", type=float, default=0.005)
-
-    parser.add_argument("--kitchen_sample_factor", type=int, default=35)
-    parser.add_argument("--living_sample_factor", type=int, default=4)
-    parser.add_argument("--balance_scenes", action='store_true')
-    parser.add_argument("--kitchen_factor", type=float, default=1.0)
-    parser.add_argument("--living_factor", type=float, default=1.0)
-    parser.add_argument("--bedroom_factor", type=float, default=1.0)
-    parser.add_argument("--bathroom_factor", type=float, default=1.0)
 
     parser.add_argument("--num_epochs", type=int, default=10)
 
