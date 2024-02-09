@@ -144,7 +144,7 @@ class AlfredDataset(object):
 
         masks, boxes, labels = [], [], []
         for i in range(mask.shape[0]):
-            if np.sum(mask[i]) >=1: #100:
+            if np.sum(mask[i]) >=10: #100:
                 class_idx = i #self.object_classes[object_class]
                 smask = mask[i] ==1
                 pos = np.where(smask)
