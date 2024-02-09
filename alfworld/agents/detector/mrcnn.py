@@ -7,7 +7,7 @@ from torchvision.models.detection import MaskRCNN
 import torchvision.models as models
 
 #from torchvision.models.detection._utils import overwrite_eps
-from torchvision.models.utils import load_state_dict_from_url
+#from torchvision.models.utils import load_state_dict_from_url
 
 from torchvision.models.detection.faster_rcnn import FasterRCNN
 from torchvision.models.detection.backbone_utils import resnet_fpn_backbone
