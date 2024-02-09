@@ -41,7 +41,7 @@ import sys
 
 MIN_PIXELS = 100 
 
-small_objects =  ['basket', 'book', 'bowl', 'cup', 'hat', 'plate', 'shoe', 'stuffed_toy']
+small_objects =  ['basket', 'book', 'bowl', 'cup', 'hat', 'plate', 'shoe', 'stuffed_toy', 'background']
 small_objects_cat_to_idx = {v:k for k,v in enumerate(small_objects)}
 #{'basket': 0, 'book': 1, 'bowl': 2, 'cup': 3, 'hat': 4, 'plate': 5, 'shoe': 6, 'stuffed_toy': 7}
 
@@ -168,7 +168,7 @@ class AlfredDataset(object):
                     print(xmax-xmin, ymax-ymin, num_pixels)
                     cv2.imwrite("debug/img_i.png", np.array(disp_img))
                     cv2.imwrite("debug/sg_i.png", sg)
-                    cv2.waitKey(0) 
+                    #cv2.waitKey(0) 
 
         if len(boxes) == 0:
             return None, None
