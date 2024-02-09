@@ -144,32 +144,32 @@ class AlfredDataset(object):
 
         masks, boxes, labels = [], [], []
         for i in range(mask.shape[0]):
-            if np.sum(mask[i]) >=100:
-                class_idx = i #self.object_classes[object_class]
-                smask = mask[i] ==1
-                pos = np.where(smask)
-                xmin = np.min(pos[1])
-                xmax = np.max(pos[1])
-                ymin = np.min(pos[0])
-                ymax = np.max(pos[0])
-                masks.append(smask)
-                #pickle.dump(masks, open("masks_" + str(idx) + ".p", "wb"))
-                object_class = small_objects[i]
-                boxes.append([xmin, ymin, xmax, ymax])
-                labels.append(class_idx)
+            #if np.sum(mask[i]) >=100:
+            class_idx = i #self.object_classes[object_class]
+            smask = mask[i] ==1
+            pos = np.where(smask)
+            xmin = np.min(pos[1])
+            xmax = np.max(pos[1])
+            ymin = np.min(pos[0])
+            ymax = np.max(pos[0])
+            masks.append(smask)
+            #pickle.dump(masks, open("masks_" + str(idx) + ".p", "wb"))
+            object_class = small_objects[i]
+            boxes.append([xmin, ymin, xmax, ymax])
+            labels.append(class_idx)
 
-                if self.args.debug:
-                    disp_img = np.array(img)
-                    cv2.rectangle(disp_img, (xmin, ymin), (xmax, ymax), color=(0, 255, 0), thickness=2)
-                    cv2.putText(disp_img, object_class, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=2)
-                    sg = np.uint8(smask[:, :, np.newaxis])*255
+            if self.args.debug:
+                disp_img = np.array(img)
+                cv2.rectangle(disp_img, (xmin, ymin), (xmax, ymax), color=(0, 255, 0), thickness=2)
+                cv2.putText(disp_img, object_class, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), thickness=2)
+                sg = np.uint8(smask[:, :, np.newaxis])*255
 
-                    if not(os.path.exists('debug')):
-                        os.makedirs('debug')
-                    print(xmax-xmin, ymax-ymin)#, num_pixels)
-                    cv2.imwrite("debug/img_" + str(i) + ".png", np.array(disp_img))
-                    cv2.imwrite("debug/sg_" + str(i) + ".png", sg)
-                    #cv2.waitKey(0) 
+                if not(os.path.exists('debug')):
+                    os.makedirs('debug')
+                print(xmax-xmin, ymax-ymin)#, num_pixels)
+                cv2.imwrite("debug/img_" + str(i) + ".png", np.array(disp_img))
+                cv2.imwrite("debug/sg_" + str(i) + ".png", sg)
+                #cv2.waitKey(0) 
 
         if len(boxes) == 0:
             return None, None

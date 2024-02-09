@@ -94,7 +94,7 @@ def evaluate(model, data_loader, device, epoch):
     header = 'Test:'
 
     coco = get_coco_api_from_dataset(data_loader.dataset)
-    breakpoint()
+    #breakpoint()
     #coco = convert_to_coco_api(data_loader.dataset)
     #coco = data_loader.dataset
     print("coco loaded")
