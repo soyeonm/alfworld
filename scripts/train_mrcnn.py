@@ -19,7 +19,7 @@ import cv2
 from alfworld.agents.detector.engine import train_one_epoch, evaluate
 import alfworld.agents.detector.utils as utils
 import torchvision
-from alfworld.agents.detector.mrcnn import get_model_instance_segmentation#, load_pretrained_model
+from alfworld.agents.detector.mrcnn import get_model_instance_segmentation1 #, load_pretrained_model
 import alfworld.agents.detector.transforms as T
 
 import alfworld.gen.constants as constants
@@ -260,7 +260,7 @@ def main(args):
     # get the model using our helper function
 
     #if len(args.load_model) > 0:
-    model = get_model_instance_segmentation(len(small_objects)+1, backbone = args.backbone).to(device)
+    model = get_model_instance_segmentation1(len(small_objects)+1, backbone = args.backbone).to(device)
 
     # construct an optimizer
     params = [p for p in model.parameters() if p.requires_grad]
