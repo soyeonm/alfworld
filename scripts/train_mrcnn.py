@@ -167,7 +167,7 @@ class AlfredDataset(object):
                     if not(os.path.exists('debug')):
                         os.makedirs('debug')
                     print(xmax-xmin, ymax-ymin)#, num_pixels)
-                    cv2.imwrite("debug/img_" + str(i) ".png", np.array(disp_img))
+                    cv2.imwrite("debug/img_" + str(i) + ".png", np.array(disp_img))
                     cv2.imwrite("debug/sg_" + str(i) + ".png", sg)
                     #cv2.waitKey(0) 
 
