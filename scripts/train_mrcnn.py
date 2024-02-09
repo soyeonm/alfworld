@@ -114,8 +114,8 @@ class AlfredDataset(object):
 
         #print("Opening: %s" % (self.imgs[idx]))
 
-        with open(meta_path, 'r') as f:
-            color_to_object = json.load(f)
+        # with open(meta_path, 'r') as f:
+        #     color_to_object = json.load(f)
 
         #print("img_path is", img_path)
         
