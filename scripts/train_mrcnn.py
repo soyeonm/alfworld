@@ -294,7 +294,7 @@ def main(args):
         # # evaluate on the test dataset
         model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
         torch.save(model.state_dict(), model_path)
-        if args.evaluate:
+        if epoch %20 ==0 and args.evaluate:
             c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
             del c 
         # save model
