@@ -278,8 +278,8 @@ def main(args):
     unseen_val_scenes = ['103997919_171031233', '102816216']
     unseen_test_scenes = ['104348082_171512994', '104862681_172226874']
     all_globs = glob('/home/soyeonm/SitAI/OGN/tmp/save_mrcnn_data/feb7_scale_premap_gt_300/*')
-    train_globs = [for g in all_globs if not(g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
-    val_globs = [for g in all_globs if (g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
+    train_globs = [g for g in all_globs if not(g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
+    val_globs = [g for g in all_globs if (g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
     breakpoint()
     dataset = AlfredDataset(train_globs, get_transform(train=True), args, True)
     dataset_test = AlfredDataset(val_globs, get_transform(train=False), args, False)
