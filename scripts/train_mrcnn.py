@@ -78,6 +78,11 @@ class AlfredDataset(object):
         for scene_dir in globs:
             rgb_dirs += glob(scene_dir + '/rgb_forward/*') + glob(scene_dir + '/rgb_down/*')
 
+        if not(train_dataset):
+            np.random.shuffle(rgb_dirs)
+            rgb_dirs = rgb_dirs[:120]
+
+
         mask_dirs = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.pbz2') for rgb_path in rgb_dirs]
         #self.imgs = glob(root + "/*/rgb_*/*")
         #self.masks = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in self.imgs]
@@ -88,7 +93,6 @@ class AlfredDataset(object):
             if os.path.exists(rgb) and os.path.exists(mask):
                 self.imgs.append(rgb)
                 self.masks.append(mask) 
-        breakpoint()
 
     def get_data_files(self, root, balance_scenes=False, train_dataset=False):
         rgb_dirs = sorted(glob(root + "/*/rgb_forward/*") + glob(root + "/*/rgb_down/*"))
