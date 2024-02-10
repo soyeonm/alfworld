@@ -65,11 +65,26 @@ class AlfredDataset(object):
 
         # load all image files, sorting them to
         # ensure that they are aligned
-        self.get_data_files(root, train_dataset=train_dataset)
+        #self.get_data_files(root, train_dataset=train_dataset)
+        globs = root
+        self.get_data_files_from_globs(globs, train_dataset=train_dataset)
 
 
     def png_only(self, file_list):
         return [f for f in file_list if f[-4:] == '.png']
+
+    def get_data_files_from_globs(self, globs, balance_scenes=False, train_dataset=False):
+        rgb_dirs = sorted(glob(root + "/*/rgb_forward/*") + glob(root + "/*/rgb_down/*"))
+        mask_dirs = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in rgb_dirs]
+        #self.imgs = glob(root + "/*/rgb_*/*")
+        #self.masks = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in self.imgs]
+
+        self.imgs = []
+        self.masks = []
+        for rgb, mask in zip(rgb_dirs, mask_dirs):
+            if os.path.exists(rgb) and os.path.exists(mask):
+                self.imgs.append(rgb)
+                self.masks.append(mask) 
 
     def get_data_files(self, root, balance_scenes=False, train_dataset=False):
         rgb_dirs = sorted(glob(root + "/*/rgb_forward/*") + glob(root + "/*/rgb_down/*"))
@@ -247,9 +262,27 @@ def main(args):
     # our dataset has two classes only - background and person
     num_classes = len(small_objects)+1
     # use our dataset and defined transformations
+    #breakpoint()
+        # rgb_dirs = sorted(glob(root + "/*/rgb_forward/*") + glob(root + "/*/rgb_down/*"))
+        # mask_dirs = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in rgb_dirs]
+        # #self.imgs = glob(root + "/*/rgb_*/*")
+        # #self.masks = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in self.imgs]
+
+        # self.imgs = []
+        # self.masks = []
+        # for rgb, mask in zip(rgb_dirs, mask_dirs):
+        #     if os.path.exists(rgb) and os.path.exists(mask):
+        #         self.imgs.append(rgb)
+        #         self.masks.append(mask) 
+
+    unseen_val_scenes = ['103997919_171031233', '102816216']
+    unseen_test_scenes = ['104348082_171512994', '104862681_172226874']
+    all_globs = glob('/home/soyeonm/SitAI/OGN/tmp/save_mrcnn_data/feb7_scale_premap_gt_300/*')
+    train_globs = [for g in all_globs if not(g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
+    val_globs = [for g in all_globs if (g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
     breakpoint()
-    dataset = AlfredDataset(args.data_path, get_transform(train=True), args, True)
-    dataset_test = AlfredDataset(args.test_data_path, get_transform(train=False), args, False)
+    dataset = AlfredDataset(train_globs, get_transform(train=True), args, True)
+    dataset_test = AlfredDataset(val_globs, get_transform(train=False), args, False)
 
     # split the dataset in train and test set
     # indices = torch.randperm(len(dataset)).tolist()
