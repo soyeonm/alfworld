@@ -78,7 +78,7 @@ class AlfredDataset(object):
         for scene_dir in globs:
             rgb_dirs += glob(scene_dir + '/rgb_forward/*') + glob(scene_dir + '/rgb_down/*')
 
-        mask_dirs = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in rgb_dirs]
+        mask_dirs = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.pbz2') for rgb_path in rgb_dirs]
         #self.imgs = glob(root + "/*/rgb_*/*")
         #self.masks = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in self.imgs]
 
