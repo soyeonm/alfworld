@@ -74,6 +74,7 @@ class AlfredDataset(object):
         return [f for f in file_list if f[-4:] == '.png']
 
     def get_data_files_from_globs(self, globs, balance_scenes=False, train_dataset=False):
+        breakpoint()
         rgb_dirs = sorted(glob(root + "/*/rgb_forward/*") + glob(root + "/*/rgb_down/*"))
         mask_dirs = [rgb_path.replace('/rgb_', '/masks_').replace('.png', '.p') for rgb_path in rgb_dirs]
         #self.imgs = glob(root + "/*/rgb_*/*")
@@ -280,7 +281,6 @@ def main(args):
     all_globs = glob('/home/soyeonm/SitAI/OGN/tmp/save_mrcnn_data/feb7_scale_premap_gt_300/*')
     train_globs = [g for g in all_globs if not(g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
     val_globs = [g for g in all_globs if (g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
-    breakpoint()
     dataset = AlfredDataset(train_globs, get_transform(train=True), args, True)
     dataset_test = AlfredDataset(val_globs, get_transform(train=False), args, False)
 
