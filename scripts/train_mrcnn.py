@@ -37,6 +37,8 @@ import pickle
 
 import os
 import sys
+import _pickle as cPickle
+import bz2
 
 
 MIN_PIXELS = 100 
@@ -132,7 +134,8 @@ class AlfredDataset(object):
         # note that we haven't converted the mask to RGB,
         # because each color corresponds to a different instance
         # with 0 being background
-        mask = pickle.load(open(mask_path, 'rb'))
+        mask = cPickle.load(bz2.BZ2File(mask_path, 'rb'))
+        #mask = pickle.load(open(mask_path, 'rb'))
         mask =np.transpose(mask, (2, 0, 1))
         if args.resize:
             mask.resize((300,300))
@@ -244,6 +247,7 @@ def main(args):
     # our dataset has two classes only - background and person
     num_classes = len(small_objects)+1
     # use our dataset and defined transformations
+    breakpoint()
     dataset = AlfredDataset(args.data_path, get_transform(train=True), args, True)
     dataset_test = AlfredDataset(args.test_data_path, get_transform(train=False), args, False)
 
@@ -297,7 +301,7 @@ def main(args):
         lr_scheduler.step()
         # # evaluate on the test dataset
         
-        if epoch %5 ==0 and args.evaluate:
+        if args.evaluate:
             model_path = os.path.join(args.save_path, "%s_%03d.pth" % (args.save_name, epoch))
             torch.save(model.state_dict(), model_path)
             c, logs = evaluate(model, data_loader_test, device=device, epoch=epoch)
