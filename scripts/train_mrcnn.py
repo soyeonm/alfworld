@@ -368,6 +368,7 @@ if __name__ == "__main__":
     parser.add_argument("--save_name", type=str, default="mrcnn_alfred_objects")
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--lr", type=float, default=0.005)
+    parser.add_argument("--without_40", action = "store_true")
 
     parser.add_argument("--num_epochs", type=int, default=10)
     args = parser.parse_args()
