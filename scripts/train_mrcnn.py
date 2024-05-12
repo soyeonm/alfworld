@@ -152,6 +152,7 @@ class AlfredDataset(object):
         
         img = Image.open(img_path).convert("RGB")
         if args.resize:
+            breakpoint()
             img.resize((300,300))
             
         # note that we haven't converted the mask to RGB,
@@ -283,11 +284,10 @@ def main(args):
         #         self.imgs.append(rgb)
         #         self.masks.append(mask) 
 
-    unseen_val_scenes = ['103997919_171031233', '102816216']
-    unseen_test_scenes = ['104348082_171512994', '104862681_172226874']
+    unseen_scenes = ['103997919_171031233', '102816216', '104348082_171512994', '104862681_172226874']
     all_globs = glob('/home/soyeonm/SitAI/OGN/tmp/save_mrcnn_data/feb7_scale_premap_gt_300/*')
-    train_globs = [g for g in all_globs if not(g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
-    val_globs = [g for g in all_globs if (g.split('/')[-1] in unseen_val_scenes+unseen_test_scenes)]
+    train_globs = [g for g in all_globs if not(g.split('/')[-1] in unseen_scenes)]
+    val_globs = [g for g in all_globs if (g.split('/')[-1] in unseen_scenes)]
     dataset = AlfredDataset(train_globs, get_transform(train=True), args, True)
     dataset_test = AlfredDataset(val_globs, get_transform(train=False), args, False)
 
@@ -358,8 +358,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     #parser.add_argument("--no_logs", action='store_true')
     parser.add_argument("--backbone", type=int, default=50)
-    parser.add_argument("--data_path", type=str, default="data/")
-    parser.add_argument("--test_data_path", type=str, required=True)
+    #parser.add_argument("--data_path", type=str, default="data/")
+    #parser.add_argument("--test_data_path", type=str, required=True)
     parser.add_argument("--gpu_num", type=int, default=0)
     parser.add_argument("--evaluate", action='store_true')
     parser.add_argument("--resize", action='store_true')
@@ -370,11 +370,5 @@ if __name__ == "__main__":
     parser.add_argument("--lr", type=float, default=0.005)
 
     parser.add_argument("--num_epochs", type=int, default=10)
-    parser.add_argument("--without_40", action = "store_true")
-
-    parser.add_argument("--sanity_check", action = "store_true")
-    parser.add_argument("--no_logs", action = "store_true")
-
-    parser.add_argument("--debug", action='store_true')
     args = parser.parse_args()
     main(args)
